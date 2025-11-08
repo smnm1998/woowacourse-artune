@@ -1,135 +1,109 @@
-# Turborepo starter
+# Artune 🎵
 
-This Turborepo starter is maintained by the Turborepo core team.
+Artune은 우아한테크코스 8기 프리코스 오픈미션 프로젝트로, 사용자의 감정을 분석하여 맞춤형 음악 플레이리스트와 AI 생성 아트워크를 제공하는 서비스입니다.
 
-## Using this example
+## 프로젝트 소개
 
-Run the following command:
+사용자가 작성한 텍스트를 OpenAI Assistant API로 감정 분석하고, 그 결과를 바탕으로 Spotify 플레이리스트와 DALL-E로 생성한 픽셀 아트를 함께 제공합니다. 감정에 따라 두 가지 옵션(감정 심취 / 감정 완화)을 제공하여 사용자가 원하는 방향으로 음악을 선택할 수 있습니다.
 
-```sh
-npx create-turbo@latest
-```
+### 주요 기능
 
-## What's inside?
+- **감정 분석**: OpenAI Assistant API를 활용한 텍스트 감정 분석
+- **플레이리스트 큐레이션**: Spotify API를 통한 감정 기반 음악 추천
+  - 감정 심취: 현재 감정을 더 깊이 느끼고 싶을 때
+  - 감정 완화: 현재 감정을 완화하고 전환하고 싶을 때
+- **음악 미리듣기**: 각 플레이리스트의 30초 미리듣기 기능
+- **AI 아트워크**: DALL-E로 생성한 플레이리스트 맞춤 픽셀 아트 디저트 & 커피(티) 이미지
+- **모바일 목업 UI**: 핸드폰 목업 내에서 토글 형태로 옵션 전환
 
-This Turborepo includes the following packages/apps:
+## 기술 스택
 
-### Apps and Packages
+### 아키텍처
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- **모노레포**: Turborepo를 활용한 효율적인 멀티 패키지 관리
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Frontend
 
-### Utilities
+- **Framework**: React 19.1
+- **Build Tool**: Vite 7.1
+- **Language**: JavaScript (ES6+)
+- **State Management**: TBD
+- **Styling**: TBD
 
-This Turborepo has some additional tools already setup for you:
+### Backend
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+- **Framework**: NestJS 11.0
+- **Runtime**: Node.js 18+
+- **Language**: JavaScript (with Babel transpilation)
+- **Testing**: Jest
 
-### Build
+### 외부 API
 
-To build all apps and packages, run the following command:
+- **OpenAI Assistant API**: 텍스트 감정 분석
+- **Spotify Web API**: 음악 플레이리스트 검색 및 미리듣기
+- **DALL-E API**: AI 픽셀 아트 이미지 생성
 
-```
-cd my-turborepo
+### 개발 도구
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+- **Code Quality**: ESLint, Prettier
+- **Version Control**: Git
+- **Package Manager**: npm 11.6.2
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
+## 프로젝트 구조
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+artune/
+├── apps/
+│   ├── backend/          # NestJS 백엔드 서버
+│   │   ├── src/
+│   │   ├── test/
+│   │   └── package.json
+│   └── frontend/         # React 프론트엔드
+│       ├── src/
+│       ├── public/
+│       └── package.json
+├── package.json          # 루트 패키지 설정
+├── turbo.json           # Turborepo 설정
+└── README.md
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## 시작하기
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+### 사전 요구사항
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+- Node.js 18 이상
+- npm 11.6.2 이상
+- OpenAI API 키
+- Spotify API 자격증명 (Client ID, Client Secret)
 
-### Remote Caching
+## 개발 가이드
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+### 코드 스타일
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+프로젝트는 ESLint와 Prettier를 사용하여 일관된 코드 스타일을 유지합니다.
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+```bash
+# 린트 실행
+npm run lint
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+# 포맷팅
+npm run format
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### 커밋 컨벤션
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+- `feat`: 새로운 기능 추가
+- `fix`: 버그 수정
+- `docs`: 문서 수정
+- `style`: 코드 포맷팅
+- `refactor`: 코드 리팩토링
+- `test`: 테스트 코드
+- `chore`: 빌드 프로세스, 설정 파일 수정
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
+## 라이센스
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
+이 프로젝트는 우아한테크코스 8기 프리코스 오픈미션 제출용 프로젝트입니다.
 
-## Useful Links
+## 기여자
 
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+- 이세민 ([@isemin](https://github.com/isemin))
