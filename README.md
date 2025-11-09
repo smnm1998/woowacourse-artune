@@ -27,8 +27,8 @@ Artune은 우아한테크코스 8기 프리코스 오픈미션 프로젝트로, 
 - **Framework**: React 19.1
 - **Build Tool**: Vite 7.1
 - **Language**: JavaScript (ES6+)
-- **State Management**: TBD
-- **Styling**: TBD
+- **State Management**: Zustand 5.0
+- **Styling**: Emotion 11.14
 
 ### Backend
 
