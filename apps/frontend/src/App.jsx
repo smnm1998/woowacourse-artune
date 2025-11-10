@@ -1,7 +1,7 @@
-import EmotionInput from '@/components/EmotionInput/EmotionInput';
+import EmotionInputPage from '@/pages/EmotionInputPage';
 
 function App() {
-  return <EmotionInput />;
+  return <EmotionInputPage />;
 }
 
 export default App;
