@@ -106,4 +106,4 @@ npm run format
 
 ## 기여자
 
-- 이세민 ([@isemin](https://github.com/isemin))
+- 이세민 ([@isemin](https://github.com/smnm1998))
