@@ -25,5 +25,8 @@
   "packageManager": "npm@11.6.2",
   "workspaces": [
     "apps/*"
-  ]
+  ],
+  "dependencies": {
+    "framer-motion": "^12.23.24"
+  }
 }
