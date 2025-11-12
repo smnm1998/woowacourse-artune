@@ -5,6 +5,7 @@ import {
   artworkInfoStyle,
   emotionalLabelStyle,
   descriptionStyle,
+  guideTextStyle,
 } from './ArtworkDisplay.styles';
 
 function ArtworkDisplay({ artwork, emotionLabel, description }) {
@@ -22,6 +23,9 @@ function ArtworkDisplay({ artwork, emotionLabel, description }) {
       <div css={artworkInfoStyle}>
         <h2 css={emotionalLabelStyle}>{emotionLabel}</h2>
         <p css={descriptionStyle}>{description}</p>
+        <p css={guideTextStyle}>
+          이런 날에는 아트워크의 디저트와 함께 노래를 감상해보세요!
+        </p>
       </div>
     </div>
   );

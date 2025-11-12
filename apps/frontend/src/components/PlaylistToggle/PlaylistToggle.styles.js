@@ -6,6 +6,8 @@ export const toggleContainerStyle = css`
   flex-direction: column;
   gap: 12px;
   margin-bottom: 20px;
+  width: 100%;
+  max-width: 500px;
 `;
 
 // 토글 버튼 래퍼
@@ -29,12 +31,12 @@ export const sliderStyle = css`
   left: 6px;
   width: calc(50% - 6px);
   height: calc(100% - 12px);
-  background: rgba(102, 126, 234, 0.3);
+  background: rgba(34, 139, 34, 0.3);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(102, 126, 234, 0.5);
+  border: 1px solid rgba(34, 139, 34, 0.5);
   border-radius: 8px;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 4px 12px rgba(34, 139, 34, 0.2);
   pointer-events: none;
   z-index: 0;
 `;

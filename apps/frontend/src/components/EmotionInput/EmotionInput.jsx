@@ -6,8 +6,16 @@ import {
   sendButtonStyle,
 } from './EmotionInput.styles';
 
+/**
+ * 감정 입력 컴포넌트
+ * @param {string} value - textarea 값
+ * @param {Function} onChange - textarea 변경 핸들러
+ * @param {Function} onSubmit - 제출 핸들러
+ * @param {string} placeholder - placeholder 텍스트
+ */
 function EmotionInput({ value, onChange, onSubmit, placeholder }) {
   const textareaRef = useAutoResizeTextarea(value);
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && e.shiftKey) {
       return;
@@ -31,6 +39,8 @@ function EmotionInput({ value, onChange, onSubmit, placeholder }) {
         }
         rows={1}
       />
+
+      {/* Send Button - 단순 버튼으로 복구 */}
       <button
         css={sendButtonStyle}
         onClick={onSubmit}

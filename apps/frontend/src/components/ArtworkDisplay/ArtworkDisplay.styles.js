@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 export const artworkContainerStyle = css`
   display: flex;
   flex-direction: column;
+  max-width: 500px;
   gap: 20px;
   padding: 20px;
 `;
@@ -49,18 +50,18 @@ export const artworkWrapperStyle = css`
 `;
 
 export const artworkImageStyle = css`
-    width; 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 
-    /* 픽셀아트 컨셉 */
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
+  /* 픽셀아트 컨셉 */
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
 `;
 
 // 감정 정보 영역
@@ -69,6 +70,8 @@ export const artworkInfoStyle = css`
   flex-direction: column;
   gap: 8px;
   text-align: center;
+  height: 80px;
+  min-height: 80px;
 `;
 
 // 감정 설명
@@ -86,4 +89,14 @@ export const descriptionStyle = css`
   margin: 0;
   color: rgba(250, 250, 250, 0.7);
   line-height: 1.5;
+`;
+
+// 안내 문구
+export const guideTextStyle = css`
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(249, 249, 249, 0.8);
+  line-height: 1.6;
+  margin-top: 8px;
+  font-style: italic;
 `;
