@@ -117,6 +117,78 @@ export const mockEmotionResult = {
             spotify: 'https://open.spotify.com/track/3ZFTkvIE7kyPt6Nu3PEa7V',
           },
         },
+        {
+          id: '0C8ZW7ezQVs4URX5aX7Kqx',
+          name: 'Uptown Funk',
+          artists: [{ name: 'Mark Ronson' }, { name: 'Bruno Mars' }],
+          album: {
+            name: 'Uptown Special',
+            images: [
+              {
+                url: 'https://i.scdn.co/image/ab67616d0000b2739e2f95ae77cf436017ada9cb',
+              },
+            ],
+          },
+          duration_ms: 269000,
+          preview_url: 'https://p.scdn.co/mp3-preview/example11',
+          external_urls: {
+            spotify: 'https://open.spotify.com/track/0C8ZW7ezQVs4URX5aX7Kqx',
+          },
+        },
+        {
+          id: '2RM4jf1Xa9zPgMGRDiht8O',
+          name: 'Shake It Off',
+          artists: [{ name: 'Taylor Swift' }],
+          album: {
+            name: '1989',
+            images: [
+              {
+                url: 'https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a396a61647',
+              },
+            ],
+          },
+          duration_ms: 242000,
+          preview_url: 'https://p.scdn.co/mp3-preview/example12',
+          external_urls: {
+            spotify: 'https://open.spotify.com/track/2RM4jf1Xa9zPgMGRDiht8O',
+          },
+        },
+        {
+          id: '1xznGGDReH1oQq0xzbwXa3',
+          name: 'Dynamite',
+          artists: [{ name: 'BTS' }],
+          album: {
+            name: 'BE',
+            images: [
+              {
+                url: 'https://i.scdn.co/image/ab67616d0000b273e1dce0f53d6f1f1f1f1f1f1f',
+              },
+            ],
+          },
+          duration_ms: 199000,
+          preview_url: 'https://p.scdn.co/mp3-preview/example13',
+          external_urls: {
+            spotify: 'https://open.spotify.com/track/1xznGGDReH1oQq0xzbwXa3',
+          },
+        },
+        {
+          id: '20I6sIOMTCkB6w7ryavxtO',
+          name: "Can't Stop The Feeling!",
+          artists: [{ name: 'Justin Timberlake' }],
+          album: {
+            name: 'Trolls (Original Motion Picture Soundtrack)',
+            images: [
+              {
+                url: 'https://i.scdn.co/image/ab67616d0000b2737b2e2b2e2b2e2b2e2b2e2b2e',
+              },
+            ],
+          },
+          duration_ms: 236000,
+          preview_url: 'https://p.scdn.co/mp3-preview/example14',
+          external_urls: {
+            spotify: 'https://open.spotify.com/track/20I6sIOMTCkB6w7ryavxtO',
+          },
+        },
       ],
     },
     soothe: {
@@ -212,6 +284,78 @@ export const mockEmotionResult = {
           preview_url: 'https://p.scdn.co/mp3-preview/example10',
           external_urls: {
             spotify: 'https://open.spotify.com/track/75JFxkI2RXiU7L9VXzMkle',
+          },
+        },
+        {
+          id: '0u2P5u6lvoDfwTYjAADbn4',
+          name: 'Holocene',
+          artists: [{ name: 'Bon Iver' }],
+          album: {
+            name: 'Bon Iver',
+            images: [
+              {
+                url: 'https://i.scdn.co/image/ab67616d0000b273d9f2e2e2e2e2e2e2e2e2e2e2',
+              },
+            ],
+          },
+          duration_ms: 337000,
+          preview_url: 'https://p.scdn.co/mp3-preview/example15',
+          external_urls: {
+            spotify: 'https://open.spotify.com/track/0u2P5u6lvoDfwTYjAADbn4',
+          },
+        },
+        {
+          id: '3AJwUDP919kvQ9QcozQPxg',
+          name: 'Skinny Love',
+          artists: [{ name: 'Bon Iver' }],
+          album: {
+            name: 'For Emma, Forever Ago',
+            images: [
+              {
+                url: 'https://i.scdn.co/image/ab67616d0000b273c8c8c8c8c8c8c8c8c8c8c8c8',
+              },
+            ],
+          },
+          duration_ms: 238000,
+          preview_url: 'https://p.scdn.co/mp3-preview/example16',
+          external_urls: {
+            spotify: 'https://open.spotify.com/track/3AJwUDP919kvQ9QcozQPxg',
+          },
+        },
+        {
+          id: '5Z01UMMf7V1o0MzF86s6WJ',
+          name: 'Fix You',
+          artists: [{ name: 'Coldplay' }],
+          album: {
+            name: 'X&Y',
+            images: [
+              {
+                url: 'https://i.scdn.co/image/ab67616d0000b273b5b5b5b5b5b5b5b5b5b5b5b5',
+              },
+            ],
+          },
+          duration_ms: 295000,
+          preview_url: 'https://p.scdn.co/mp3-preview/example17',
+          external_urls: {
+            spotify: 'https://open.spotify.com/track/5Z01UMMf7V1o0MzF86s6WJ',
+          },
+        },
+        {
+          id: '5QdyldG4Fl4TPiOIeMNpBZ',
+          name: 'Mad World',
+          artists: [{ name: 'Gary Jules' }],
+          album: {
+            name: 'Donnie Darko (Original Soundtrack)',
+            images: [
+              {
+                url: 'https://i.scdn.co/image/ab67616d0000b273a1a1a1a1a1a1a1a1a1a1a1a1',
+              },
+            ],
+          },
+          duration_ms: 189000,
+          preview_url: 'https://p.scdn.co/mp3-preview/example18',
+          external_urls: {
+            spotify: 'https://open.spotify.com/track/5QdyldG4Fl4TPiOIeMNpBZ',
           },
         },
       ],
