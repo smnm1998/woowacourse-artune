@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { colors } from '@/styles/theme';
 
 export const containerStyle = css`
   display: flex;
@@ -15,20 +16,20 @@ export const buttonStyle = css`
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: ${colors.background.glass.light};
+  border: 1px solid ${colors.border.strong};
   border-radius: 12px;
-  color: #f9f9f9;
+  color: ${colors.text.primary};
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
-    backgorund: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
+    backgorund: ${colors.background.glass.medium};
+    border-color: ${colors.border.hover};
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px ${colors.shadow.light};
   }
 
   // 클릭 효과
@@ -42,7 +43,7 @@ export const iconWrapperStyle = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #2d5f2d;
+  color: ${colors.accent.green};
 `;
 
 // 버튼 텍스트

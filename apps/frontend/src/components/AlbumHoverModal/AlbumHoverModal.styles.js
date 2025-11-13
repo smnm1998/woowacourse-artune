@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { colors } from '@/styles/theme';
 
 export const modalOverlayStyle = css`
   position: absolute;
@@ -28,7 +29,7 @@ export const modalContentStyle = css`
 export const albumTitleStyle = css`
   font-size: 16px;
   font-weight: 700;
-  color: #ffffff;
+  color: ${colors.text.primary};
   line-height: 1.4;
 
   // 긴 제목 처리
@@ -43,7 +44,7 @@ export const albumTitleStyle = css`
 export const albumInfoStyle = css`
   font-size: 16px;
   font-weight: 700;
-  color: #ffffff;
+  color: ${colors.text.primary};
   line-height: 1.4;
 
   // 긴 제목 처리
@@ -58,7 +59,7 @@ export const albumInfoStyle = css`
 export const artistNameStyle = css`
   font-size: 14px;
   font-weight: 500;
-  color: #d0d0d0;
+  color: ${colors.text.secondary};
   line-height: 1.3;
 `;
 
@@ -66,7 +67,7 @@ export const artistNameStyle = css`
 export const trackNameStyle = css`
   font-size: 13px;
   font-weight: 400;
-  color: #b0b0b0;
+  color: ${colors.text.secondary};
   line-height: 1.3;
 
   // 긴 제목 처리
@@ -81,7 +82,7 @@ export const playingIndicatorStyle = css`
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: #2d5f2d;
+  color: ${colors.accent.green};
   font-size: 12px;
   font-weight: 600;
 

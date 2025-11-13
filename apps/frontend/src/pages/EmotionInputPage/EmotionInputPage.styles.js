@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { colors } from '@/styles/theme';
 
 export const containerStyle = css`
   display: flex;
@@ -8,7 +9,7 @@ export const containerStyle = css`
   min-height: 100vh;
   padding: 20px;
   gap: 24px;
-  background: linear-gradient(135deg, #000f00 0%, #0d0d0d 100%);
+  background: ${colors.background.gradient};
 `;
 
 export const titleWrapperStyle = css`
@@ -23,13 +24,13 @@ export const titleStyle = css`
   font-size: 50px;
   font-weight: 700;
   margin: 0;
-  color: #f9f9f9;
+  color: ${colors.text.primary};
 `;
 
 export const subTitleStyle = css`
   font-size: 26px;
   font-weight: 700;
-  color: #f9f9f9;
+  color: ${colors.text.primary};
   opacity: 0.6;
 `;
 
@@ -41,10 +42,10 @@ export const inputWrapperStyle = css`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: rgba(255, 255, 255, 0.1);
+  background: ${colors.background.glass.light};
   border-radius: 16px;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid ${colors.border.medium};
 `;

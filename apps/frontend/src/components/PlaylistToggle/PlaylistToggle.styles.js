@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { colors } from '@/styles/theme';
 
 // 전체 컨테이너
 export const toggleContainerStyle = css`
@@ -16,9 +17,9 @@ export const toggleWrapperStyle = css`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
-  background: rgba(255, 255, 255, 0.05);
+  background: ${colors.background.glass.subtle};
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid ${colors.border.light};
   border-radius: 12px;
   padding: 6px;
   overflow: visible;
@@ -66,7 +67,7 @@ export const toggleButtonStyle = css`
 
 // 토글 버튼 (활성화)
 export const activeToggleButtonStyle = css`
-  color: #f9f9f9;
+  color: ${colors.text.primary};
 `;
 
 // 모드 라벨
@@ -83,11 +84,11 @@ export const tooltipStyle = css`
   left: 50%;
   transform: translateX(-50%) translateY(4px);
   padding: 8px 12px;
-  background: rgba(20, 20, 20, 0.95);
+  background: ${colors.background.dark.primary};
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid ${colors.border.strong};
   border-radius: 8px;
-  color: #f9f9f9;
+  color: ${colors.text.primary};
   font-size: 12px;
   font-weight: 400;
   white-space: nowrap;
@@ -104,7 +105,7 @@ export const tooltipStyle = css`
     left: 50%;
     transform: translateX(-50%);
     border: 6px solid transparent;
-    border-top-color: rgba(20, 20, 20, 0.95);
+    border-top-color: ${colors.background.dark.primary};
   }
 `;
 

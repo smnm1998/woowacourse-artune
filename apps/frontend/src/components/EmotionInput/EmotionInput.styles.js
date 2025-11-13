@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { colors } from '@/styles/theme';
 
 export const textareaContainerStyle = css`
   position: relative;
@@ -15,12 +16,12 @@ export const textareaStyle = css`
   max-height: 200px;
   padding: 16px;
   font-size: 20px;
-  color: #f9f9f9;
+  color: ${colors.text.primary};
   border-radius: 12px;
   resize: none;
   transition: all 0.3s ease;
   overflow-y: auto;
-  caret-color: #f9f9f9;
+  caret-color: ${colors.text.primary};
 
   &:focus {
     outline: none;
@@ -34,7 +35,7 @@ export const textareaStyle = css`
   }
 
   &::placeholder {
-    color: rgba(249, 249, 249, 0.5);
+    color: ${colors.text.placeholder};
   }
 
   /* 스크롤바 스타일링 */
@@ -49,14 +50,14 @@ export const textareaStyle = css`
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    background: ${colors.scrollbar.thumb};
     border-radius: 10px;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: ${colors.accent.primary.base};
   }
 `;
 

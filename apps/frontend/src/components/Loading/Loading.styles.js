@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { colors } from '@/styles/theme';
 
 export const loadingContainerStyle = css`
   display: flex;
@@ -6,7 +7,7 @@ export const loadingContainerStyle = css`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #000f00 0%, #0d0d0d 100%);
+  background: ${colors.background.gradient};
   padding: 40px 20px;
   overflow: hidden;
 `;
@@ -33,7 +34,7 @@ export const progressWrapperStyle = css`
 export const progressPercentageStyle = css`
   font-size: 24px;
   font-weight: 700;
-  color: #f9f9f9;
+  color: ${colors.text.primary};
   text-align: center;
   margin-bottom: 16px;
 `;

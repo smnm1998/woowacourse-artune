@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { colors } from '@/styles/theme';
 
 // 전체 컨테이너
 export const artworkContainerStyle = css`
@@ -16,9 +17,9 @@ export const artworkWrapperStyle = css`
   border-radius: 16px;
   overflow: hidden;
   backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: ${colors.background.glass.subtle};
+  border: 1px solid ${colors.border.light};
+  box-shadow: 0 8px 32px ${colors.shadow.light};
 
   /* 이미지 로딩 */
   position: relative;
@@ -30,12 +31,7 @@ export const artworkWrapperStyle = css`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.05) 50%,
-      rgba(255, 255, 255, 0) 100%
-    );
+    background: ${colors.gradients.shimmer};
     animation: shimmer 2s infinite;
   }
 
@@ -79,15 +75,15 @@ export const emotionalLabelStyle = css`
   font-size: 32px;
   font-weight: 700;
   margin: 0;
-  color: #f9f9f9;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  color: ${colors.text.primary};
+  text-shadow: 0 2px 8px ${colors.shadow.light};
 `;
 
 export const descriptionStyle = css`
   font-size: 16px;
   font-weight: 400;
   margin: 0;
-  color: rgba(250, 250, 250, 0.7);
+  color: ${colors.text.tertiary};
   line-height: 1.5;
 `;
 

@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { colors } from '@/styles/theme';
 
 export const cardContainerStyle = css`
   display: flex;
@@ -36,20 +37,16 @@ export const vinylDiscStyle = css`
       #d4ffe4 300deg,
       #e0e0e0 360deg
     ),
-    radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.3) 0%,
-      rgba(200, 200, 200, 0.5) 50%,
-      rgba(150, 150, 150, 0.7) 100%
+    ${colors.gradients.vinylReflection}
     );
   background-blend-mode: overlay;
 
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid ${colors.border.vinyl};
 
   box-shadow:
-    0 6px 20px rgba(0, 0, 0, 0.4),
-    inset 0 0 50px rgba(255, 255, 255, 0.15);
+    0 6px 20px ${colors.shadow.medium}, 
+    inset 0 0 50px ${colors.shadow.inset};
 
   transform: rotate(-20deg);
   z-index: 0;
@@ -67,14 +64,9 @@ export const vinylCenterStyle = css`
   width: 20%;
   height: 20%;
 
-  background: radial-gradient(
-    circle,
-    rgba(40, 40, 40, 0.9) 0%,
-    rgba(80, 80, 80, 0.7) 40%,
-    rgba(140, 140, 140, 0.5) 100%
-  );
+  background: ${colors.gradients.vinylCenter};
   border-radius: 50%;
-  border: 2px solid rgba(200, 200, 200, 0.6);
+  border: 2px solid ${colors.border.vinylCenter};
 
   box-shadow:
     inset 0 2px 8px rgba(0, 0, 0, 0.8),
@@ -90,8 +82,8 @@ export const albumCoverStyle = css`
   border-radius: 8px;
   overflow: hidden;
   box-shadow:
-    0 8px 16px rgba(0, 0, 0, 0.4),
-    0 4px 8px rgba(0, 0, 0, 0.3);
+    0 8px 16px ${colors.shadow.medium},
+    0 4px 8px ${colors.shadow.light};
   z-index: 1;
 
   img {
@@ -106,7 +98,7 @@ export const albumCoverStyle = css`
 export const albumNameStyle = css`
   font-size: 14px;
   font-weight: 600;
-  color: #f9f9f9;
+  color: ${colors.text.primary};
   line-height: 1.4;
 
   // 2줄 넘어가면 생략
@@ -121,7 +113,7 @@ export const albumNameStyle = css`
 export const artistNameStyle = css`
   font-size: 12px;
   font-weight: 400;
-  color: #b0b0b0;
+  color: ${colors.text.secondary};
   line-height: 1.3;
 
   // 1줄 넘어가면 생략

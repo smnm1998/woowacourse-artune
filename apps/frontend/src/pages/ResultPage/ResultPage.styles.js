@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { colors } from '@/styles/theme';
 
 export const containerStyle = css`
   display: flex;
@@ -26,16 +27,16 @@ export const leftSectionStyle = css`
   gap: 24px;
 
   // 글래스모피즘 효과
-  background: rgba(255, 255, 255, 0.05);
+  background: ${colors.background.glass.subtle};
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid ${colors.border.light};
   border-radius: 24px;
   padding: 32px;
 
   // 입체감
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 8px 32px ${colors.shadow.light},
+    inset 0 1px 0 ${colors.shadow.inset};
 
   // 고정
   position: sticky;

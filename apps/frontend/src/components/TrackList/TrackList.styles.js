@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { colors } from '@/styles/theme';
 
 // 트랙 리스트 컨테이너
 export const trackListContainerStyle = css`
@@ -15,9 +16,9 @@ export const trackItemStyle = css`
   align-items: center;
   gap: 12px;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.05);
+  background: ${colors.background.glass.subtle};
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid ${colors.border.light};
   border-radius: 12px;
   transition: all 0.2s ease;
   overflow: hidden;
@@ -26,7 +27,7 @@ export const trackItemStyle = css`
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.15);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px ${colors.shadow.subtle};
   }
 `;
 
@@ -37,7 +38,7 @@ export const albumCoverStyle = css`
   height: 56px;
   border-radius: 8px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.05);
+  background: ${colors.background.glass.subtle};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,7 +64,7 @@ export const trackNameStyle = css`
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: #f9f9f9;
+  color: ${colors.text.primary};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -90,7 +91,7 @@ export const trackActionsStyle = css`
 // 재생 시간
 export const durationStyle = css`
   font-size: 12px;
-  color: rgba(249, 249, 249, 0.5);
+  color: ${colors.text.placeholder};
   font-weight: 500;
 `;
 
@@ -101,16 +102,16 @@ export const playButtonStyle = css`
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: rgba(102, 126, 234, 0.3);
+  background: ${colors.accent.primary.base};
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(102, 126, 234, 0.5);
+  border: 1px solid ${colors.accent.primary.border};
   border-radius: 50%;
-  color: #f9f9f9;
+  color: ${colors.text.primary};
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: rgba(102, 126, 234, 0.5);
+    background: rgba(69, 234, 69, 0.5);
     transform: scale(1.1);
   }
 
@@ -157,7 +158,7 @@ export const playingIndicatorStyle = css`
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(180deg, #45ea45 0%, #2d5f2d 100%);
   animation: pulse 1.5s ease-in-out infinite;
 
   @keyframes pulse {
