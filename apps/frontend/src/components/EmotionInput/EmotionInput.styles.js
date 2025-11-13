@@ -72,18 +72,18 @@ export const sendButtonStyle = css`
   align-items: center;
   transition: all 0.3s ease;
   font-size: 24px;
-  color: #f9f9f9;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  color: ${colors.text.primary};
+  background: ${colors.background.glass.light};
+  box-shadow: 0 8px 32px 0 ${colors.shadow.medium};
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid ${colors.border.medium};
 
   &:hover:not(:disabled) {
-    background: rgba(102, 126, 234, 0.3);
-    border: 1px solid rgba(102, 126, 234, 0.4);
+    background: ${colors.accent.primary.base};
+    border: 1px solid ${colors.accent.primary.border};
     transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 12px 24px ${colors.shadow.colored};
   }
 
   &:active:not(:disabled) {
@@ -91,9 +91,9 @@ export const sendButtonStyle = css`
   }
 
   &:disabled {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(249, 249, 249, 0.3);
+    background: ${colors.background.glass.subtle};
+    border: 1px solid ${colors.border.light};
+    color: ${colors.text.disabled};
     cursor: not-allowed;
     transform: none;
   }
