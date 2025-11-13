@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { colors } from '@/styles/theme';
 
 // 전체 컨테이너
-export const artworkContainerStyle = css`
+export const artworkContainer = css`
   display: flex;
   flex-direction: column;
   max-width: 500px;
@@ -11,7 +11,7 @@ export const artworkContainerStyle = css`
 `;
 
 // 아트워크
-export const artworkWrapperStyle = css`
+export const artworkWrapper = css`
   width: 100%;
   aspect-ratio: 1/1;
   border-radius: 16px;
@@ -45,7 +45,7 @@ export const artworkWrapperStyle = css`
   }
 `;
 
-export const artworkImageStyle = css`
+export const artworkImage = css`
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -61,7 +61,7 @@ export const artworkImageStyle = css`
 `;
 
 // 감정 정보 영역
-export const artworkInfoStyle = css`
+export const artworkInfo = css`
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -71,7 +71,7 @@ export const artworkInfoStyle = css`
 `;
 
 // 감정 설명
-export const emotionalLabelStyle = css`
+export const emotionalLabel = css`
   font-size: 32px;
   font-weight: 700;
   margin: 0;
@@ -79,7 +79,7 @@ export const emotionalLabelStyle = css`
   text-shadow: 0 2px 8px ${colors.shadow.light};
 `;
 
-export const descriptionStyle = css`
+export const description = css`
   font-size: 16px;
   font-weight: 400;
   margin: 0;
@@ -88,7 +88,7 @@ export const descriptionStyle = css`
 `;
 
 // 안내 문구
-export const guideTextStyle = css`
+export const guideText = css`
   font-size: 14px;
   font-weight: 500;
   color: rgba(249, 249, 249, 0.8);

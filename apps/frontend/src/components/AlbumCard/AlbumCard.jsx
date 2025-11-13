@@ -37,19 +37,11 @@ function AlbumCard({ album, isHovered }) {
         <motion.div
           css={vinylDiscStyle}
           animate={{
-            rotate: isHovered ? 360 : 0,
             left: isHovered ? 0 : '15%',
           }}
           transition={{
-            rotate: {
-              duration: 2, // 2초에 1바퀴
-              repeat: isHovered ? Infinity : 0,
-              ease: 'linear',
-            },
-            left: {
-              duration: 0.3, // 0.3초에 이동
-              ease: 'easeOut', // 부드럽게 감속
-            },
+            duration: 0.3, // 0.3초에 이동
+            ease: 'easeOut', // 부드럽게 감속
           }}
         >
           {/* CD 중앙 디테일 */}

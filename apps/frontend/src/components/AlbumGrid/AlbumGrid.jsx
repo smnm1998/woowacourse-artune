@@ -6,10 +6,10 @@ import { gridContainerStyle } from './AlbumGrid.styles';
 
 /**
  * 앨범 그리드 컴포넌트
- * - 3x3 그리드로 9개의 앨범을 표시
+ * - 2x4 그리드로 10개의 앨범을 표시
  * - 각 앨범 호버 시 상세 정보와 미리듣기 제공
  *
- * @param {Array} tracks - Spotify Track Array (9개)
+ * @param {Array} tracks - Spotify Track Array (10개)
  * @param {string} tracks[].id - 트랙 고유 ID
  * @param {string} tracks[].name - 트랙 이름
  * @param {Array} tracks[].artists - 아티스트 배열

@@ -26,26 +26,14 @@ export const vinylDiscStyle = css`
   height: 100%;
 
   // 홀로그램 효과
-  background:
-    conic-gradient(
-      from 45deg,
-      #e0e0e0 0deg,
-      #ffd4ff 60deg,
-      #d4f4ff 120deg,
-      #fff4d4 180deg,
-      #ffd4d4 240deg,
-      #d4ffe4 300deg,
-      #e0e0e0 360deg
-    ),
-    ${colors.gradients.vinylReflection}
-    );
+  background: ${colors.gradients.hologram}, ${colors.gradients.vinylReflection};
   background-blend-mode: overlay;
 
   border-radius: 50%;
   border: 1px solid ${colors.border.vinyl};
 
   box-shadow:
-    0 6px 20px ${colors.shadow.medium}, 
+    0 6px 20px ${colors.shadow.medium},
     inset 0 0 50px ${colors.shadow.inset};
 
   transform: rotate(-20deg);
