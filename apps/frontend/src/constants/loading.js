@@ -12,4 +12,4 @@ export const MAX_PROGRESS_BEFORE_COMPLETE = 90;
 export const PROGRESS_INCREMENT_MAX = 15;
 
 /** API 호출 시뮬레이션 대기 시간 (밀리초) - 실제 API 연동 시 제거 예정 */
-export const MOCK_API_DELAY = 8000;
+export const MOCK_API_DELAY = 5000;
