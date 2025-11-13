@@ -35,11 +35,19 @@ function ErrorToast({ message, onClose, onRetry }) {
           {/* 액션 버튼 */}
           <div css={styles.actionsWrapper}>
             {onRetry && (
-              <button css={styles.retryButton} onClick={onRetry}>
+              <button
+                css={styles.retryButton}
+                onClick={onRetry}
+                aria-label="재시도"
+              >
                 재시도
               </button>
             )}
-            <button css={styles.closeButton} onClick={onClose}>
+            <button
+              css={styles.closeButton}
+              onClick={onClose}
+              aria-label="닫기"
+            >
               <MdClose size={20} />
             </button>
           </div>
