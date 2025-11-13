@@ -189,6 +189,24 @@ export const mockEmotionResult = {
             spotify: 'https://open.spotify.com/track/20I6sIOMTCkB6w7ryavxtO',
           },
         },
+        {
+          id: '4VqPOruhp5EdPBeR92t6lQ',
+          name: 'Shut Up and Dance',
+          artists: [{ name: 'Walk the Moon' }],
+          album: {
+            name: 'Talking Is Hard',
+            images: [
+              {
+                url: 'https://i.scdn.co/image/ab67616d0000b2731f1f1f1f1f1f1f1f1f1f1f1f',
+              },
+            ],
+          },
+          duration_ms: 199000,
+          preview_url: 'https://p.scdn.co/mp3-preview/example19',
+          external_urls: {
+            spotify: 'https://open.spotify.com/track/4VqPOruhp5EdPBeR92t6lQ',
+          },
+        },
       ],
     },
     soothe: {
@@ -356,6 +374,24 @@ export const mockEmotionResult = {
           preview_url: 'https://p.scdn.co/mp3-preview/example18',
           external_urls: {
             spotify: 'https://open.spotify.com/track/5QdyldG4Fl4TPiOIeMNpBZ',
+          },
+        },
+        {
+          id: '4uLU6hMCjMI75M1A2tKUQC',
+          name: 'Let It Be',
+          artists: [{ name: 'The Beatles' }],
+          album: {
+            name: 'Let It Be',
+            images: [
+              {
+                url: 'https://i.scdn.co/image/ab67616d0000b273d8d8d8d8d8d8d8d8d8d8d8d8',
+              },
+            ],
+          },
+          duration_ms: 243000,
+          preview_url: 'https://p.scdn.co/mp3-preview/example20',
+          external_urls: {
+            spotify: 'https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC',
           },
         },
       ],
