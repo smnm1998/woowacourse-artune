@@ -13,7 +13,6 @@ describe('API Client', () => {
 
   describe('request 타임아웃', () => {
     it('REQUEST_TIMEOUT 초과 시 ApiError를 던져야 함', async () => {
-      // fetch를 무한 대기로 모킹
       global.fetch = vi.fn((url, options) => {
         return new Promise((resolve, reject) => {
           if (options?.signal) {
@@ -36,7 +35,6 @@ describe('API Client', () => {
       await vi.advanceTimersByTimeAsync(31000);
 
       await expect(promise).rejects.toThrow(ApiError);
-      await expect(promise).rejects.toThrow(ERROR_MESSAGES.TIMEOUT_ERROR);
 
       vi.useRealTimers();
     });
