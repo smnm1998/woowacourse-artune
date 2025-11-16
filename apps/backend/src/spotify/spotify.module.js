@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { SpotifyService } from './openai.service';
+import { SpotifyService } from './spotify.service';
 
 /**
  * Spotify 음원 추천 모듈
@@ -12,4 +12,4 @@ import { SpotifyService } from './openai.service';
   providers: [SpotifyService],
   exports: [SpotifyService],
 })
-export class SpotifyService {}
+export class SpotifyModule {}
