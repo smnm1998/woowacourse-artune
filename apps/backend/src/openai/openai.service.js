@@ -120,8 +120,11 @@ export class OpenAIService {
       - surprise(놀람): immerse는 역동적인 음악, soothe는 편안함을 주는 음악
       - neutral (중립): 균형 잡힌 다양한 장르 + 인기있는 음악
 
-      **Spotify 장르 예시**
-      pop, rock, hip-hop, r-n-b, jazz, classical, electronic, indie, folk, country, k-pop, dance, funk, soul, blues, acoustic, ambient, chill
+      **Spotify 지원 장르 (반드시 이 목록에서만 선택)**
+      pop, rock, hip-hop, r-n-b, dance, indie, indie-pop, electronic, edm,
+      house, techno, disco, funk, soul, jazz, blues, classical, acoustic,
+      folk, country, latin, reggae, ska, punk, metal, alternative, grunge,
+      k-pop, j-pop, anime, chill, ambient, sleep, study, happy, sad, party
 
       **중요사항**
       - immerse: 현재 감정을 더 깊이 느끼고 싶을 때
