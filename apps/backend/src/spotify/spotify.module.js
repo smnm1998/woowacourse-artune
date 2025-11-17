@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SpotifyService } from './spotify.service';
+import { ITunesModule } from '../itunes/itunes.module.js';
 
 /**
  * Spotify 음원 추천 모듈
@@ -8,7 +9,7 @@ import { SpotifyService } from './spotify.service';
  * - ConfigModule을 import하여 환경변수 접근 가능
  */
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigModule, ITunesModule],
   providers: [SpotifyService],
   exports: [SpotifyService],
 })

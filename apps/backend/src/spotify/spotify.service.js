@@ -2,6 +2,14 @@ import { Injectable, BadRequestException, Dependencies } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import SpotifyWebApi from 'spotify-web-api-node';
 import axios from 'axios';
+import { filterTracks } from './utils/track-filter.util.js';
+import {
+  addSimilarityScores,
+  sortBySimlilarityAndPopularity,
+} from './utils/audio-similarity.util.js';
+import { ensureArtistDiversity } from './utils/artist-diversity.util.js';
+import { mapTracksToDTO } from './utils/track-mapper.util.js';
+import { ITunesService } from '../itunes/itunes.service.js';
 
 /**
  * Spotify Web API를 활용한 음악 추천 서비스
@@ -9,18 +17,19 @@ import axios from 'axios';
  * - 감정 기반 음악 추천
  */
 @Injectable()
-@Dependencies(ConfigService)
+@Dependencies(ConfigService, ITunesService)
 export class SpotifyService {
   /**
-   * @param {ConfigService} configService - NestJS ConfigService
+   * @param {ConfigService} configService
+   * @param {ITunesService} itunesService
    */
-  constructor(configService) {
+  constructor(configService, itunesService) {
     this.spotifyApi = new SpotifyWebApi({
       clientId: configService.get('SPOTIFY_CLIENT_ID'),
       clientSecret: configService.get('SPOTIFY_CLIENT_SECRET'),
     });
 
-    // 서비스 시작 시 액세스 토큰 획득
+    this.itunesService = itunesService;
     this.authenticated = false;
   }
 
@@ -30,7 +39,6 @@ export class SpotifyService {
    */
   async authenticate() {
     try {
-      console.log('Spotify 인증 시도 중...');
       const data = await this.spotifyApi.clientCredentialsGrant();
       this.spotifyApi.setAccessToken(data.body.access_token);
       this.authenticated = true;
@@ -42,46 +50,91 @@ export class SpotifyService {
 
   /**
    * valence와 energy 값에 따라 감정 키워드 반환
-   *
    * @param {number} valence - 긍정도
    * @param {number} energy - 에너지
    * @returns {string} 감정 키워드
    */
   getEmotionKeywords(valence, energy) {
-    if (valence > 0.7 && energy > 0.7) {
-      return 'happy upbeat energetic';
+    const getKey = (value) => {
+      if (value > 0.7) return 'high';
+      if (value > 0.3) return 'mid';
+      return 'low';
+    };
+
+    const vKey = getKey(valence);
+    const eKey = getKey(energy);
+
+    const keywordMap = {
+      'high-high': 'happy upbeat energetic',
+      'high-mid': 'uplifting positive',
+      'high-low': 'happy chill relaxing',
+      'mid-high': 'energetic dynamic',
+      'mid-mid': 'balanced moderate',
+      'mid-low': 'calm peaceful',
+      'low-high': 'intense powerful',
+      'low-mid': 'melancholic emotional',
+      'low-low': 'sad melancholic',
+    };
+
+    return keywordMap[`${vKey}-${eKey}`];
+  }
+
+  /**
+   * 여러 트랙의 Audio Features를 가져옴
+   * @param {string[]} trackIds - 트랙 ID 배열 (최대 100개)
+   * @returns {Promise<Object>} 트랙 ID별 audio features 맵
+   */
+  async getAudioFeatures(trackIds) {
+    if (!this.authenticated) {
+      await this.authenticate();
     }
-    if (valence > 0.7 && energy <= 0.7) {
-      return 'happy chill relaxing';
-    }
-    if (valence <= 0.3 && energy > 0.7) {
-      return 'intense powerful';
-    }
-    if (valence <= 0.3 && energy <= 0.3) {
-      return 'sad melancholic';
-    }
-    if (energy > 0.7) {
-      return 'energetic dynamic';
-    } else {
-      return 'chill mellow';
+
+    try {
+      const accessToken = this.spotifyApi.getAccessToken();
+
+      const response = await axios.get(
+        'https://api.spotify.com/v1/audio-features',
+        {
+          params: {
+            ids: trackIds.join(','),
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+
+      const featuresMap = {};
+      response.data.audio_features.forEach((features, index) => {
+        if (features) {
+          featuresMap[trackIds[index]] = features;
+        }
+      });
+
+      return featuresMap;
+    } catch (error) {
+      console.error('Audio Features 가져오기 실패:', error.message);
+      return {};
     }
   }
 
   /**
-   * 장르, valence, energy, tempo 기반 음악 추천
+   * 장르, valence, energy, tempo 기반 음악 추천 (하이브리드 방식)
    *
-   * Spotify에서 지원하는 장르만을 이용할 것
-   * 예시: acoustic, bossanova, country, dancehall 등
+   * 개선 사항:
+   * 1. 인기도 필터링 (최소 35 이상)
+   * 2. Audio Features 기반 유사도 정렬
+   * 3. 중복 트랙 제거
+   * 4. 아티스트 다양성 보장
+   * 5. 한국 시장 고려 (market=KR)
    *
    * @param {string[]} genres - 장르 배열 (최소 1개)
    * @param {number} valence - 긍정도 (0.0 ~ 1.0)
    * @param {number} energy - 에너지 (0.0 ~ 1.0)
    * @param {number} tempo - BPM (0 이상)
    * @returns {Promise<Array>} 추천 트랙 목록
-   * @returns {BadRequestException} 파라미터 유효성 검증 실패 시
    */
   async getRecommendations(genres, valence, energy, tempo) {
-    // 파라미터 유효성 검증
     this.validateParameters(genres, valence, energy, tempo);
 
     if (!this.authenticated) {
@@ -90,19 +143,22 @@ export class SpotifyService {
 
     try {
       const accessToken = this.spotifyApi.getAccessToken();
-
-      // 감정에 맞는 검색 키워드 생성
       const emotionKeywords = this.getEmotionKeywords(valence, energy);
-      const searchQuery = `${genres.join(' ')} ${emotionKeywords}`;
 
-      console.log('Search Query:', searchQuery);
+      // 가장 중요한 NOT 필터만 선택 (앰비언트, 클래식, 명상음악 제외)
+      const excludeKeywords = 'NOT classical NOT ambient NOT meditation';
+      const includeKeywords = 'artist';
 
-      // Search API로 트랙 검색 (Recommendations API 대체)
+      // 장르는 최대 2개까지만 사용
+      const genreQuery = genres.slice(0, 2).join(' ');
+
+      const searchQuery = `${genreQuery} ${emotionKeywords} ${includeKeywords} ${excludeKeywords}`;
+
       const response = await axios.get('https://api.spotify.com/v1/search', {
         params: {
           q: searchQuery,
           type: 'track',
-          limit: 20,
+          limit: 50,
           market: 'KR',
         },
         headers: {
@@ -110,37 +166,107 @@ export class SpotifyService {
         },
       });
 
-      return response.data.tracks.items.map((track) => ({
-        id: track.id,
-        name: track.name,
-        artists: track.artists.map((artist) => ({
-          name: artist.name,
-          id: artist.id,
-        })),
-        album: {
-          id: track.album.id,
-          name: track.album.name,
-          imageUrl: track.album.images[0]?.url,
-          totalTracks: track.album.total_tracks,
-          releaseDate: track.album.release_date,
-          spotifyUrl: track.album.external_urls.spotify,
-        },
-        previewUrl: track.preview_url,
-        spotifyUrl: track.external_urls.spotify,
-        popularity: track.popularity,
-        duration: track.duration_ms,
+      const rawTracks = response.data.tracks.items;
+
+      // 컴필레이션 앨범 및 Various Artists 제외
+      const realArtistTracks = rawTracks.filter((track) => {
+        const artistName = track.artists[0]?.name?.toLowerCase() || '';
+        const albumType = track.album?.album_type;
+
+        // Various Artists, VA, 묶음 제외
+        if (
+          artistName.includes('various') ||
+          artistName === 'va' ||
+          artistName.includes('ost') ||
+          artistName.includes('compilation')
+        ) {
+          return false;
+        }
+
+        // 컴필레이션 앨범 제외
+        if (albumType === 'compilation') {
+          return false;
+        }
+
+        return true;
+      });
+
+      // preview_url 통계 확인
+      const previewUrlStats = {
+        total: rawTracks.length,
+        withPreview: rawTracks.filter((t) => t.preview_url !== null).length,
+        withoutPreview: rawTracks.filter((t) => t.preview_url === null).length,
+      };
+
+      // 1단계: 트랙 필터링 (중복 제거 + 인기도)
+      const { tracks: filteredTracks, stats } = filterTracks(realArtistTracks, {
+        minPopularity: 50,
+        minResults: 40,
+      });
+
+      // 2단계: Audio Features 가져오기
+      const trackIds = filteredTracks.map((track) => track.id);
+      const audioFeaturesMap = await this.getAudioFeatures(trackIds);
+
+      // 3단계: 유사도 계산 및 정렬
+      const tracksWithSimilarity = addSimilarityScores(
+        filteredTracks,
+        audioFeaturesMap,
+        valence,
+        energy,
+        tempo,
+      );
+
+      const sortedTracks = sortBySimlilarityAndPopularity(tracksWithSimilarity);
+
+      // instrumentalness 필터링 (보컬 없는 순수 연주곡 제외)
+      const vocalTracks = sortedTracks.filter((item) => {
+        const instrumentalness = item.audioFeatures?.instrumentalness;
+        // instrumentalness > 0.5: 순수 연주곡으로 간주하고 제외
+        if (instrumentalness !== undefined && instrumentalness > 0.5) {
+          return false;
+        }
+        return true;
+      });
+
+      // 4단계: 아티스트 다양성 보장
+      const diverseTracks = ensureArtistDiversity(vocalTracks, 20, 2);
+
+      // 5단계: iTunes에서 preview URL 가져오기
+      const trackList = diverseTracks.map((item) => ({
+        id: item.track.id,
+        artistName: item.track.artists[0]?.name,
+        trackName: item.track.name,
       }));
+
+      const itunesPreviewMap =
+        await this.itunesService.getPreviewUrlsBatch(trackList);
+
+      // preview_url을 iTunes URL로 교체
+      const tracksWithItunes = diverseTracks.map((item) => {
+        const itunesPreview = itunesPreviewMap.get(item.track.id);
+        if (itunesPreview) {
+          return {
+            ...item,
+            track: {
+              ...item.track,
+              preview_url: itunesPreview,
+            },
+          };
+        }
+        return item;
+      });
+
+      // 6단계: DTO 매핑
+      return mapTracksToDTO(tracksWithItunes.map((item) => item.track));
     } catch (error) {
-      // 엑세스 토큰 만료 시 재인증 후 재시도
       if (error.response?.status === 401) {
         await this.authenticate();
         return this.getRecommendations(genres, valence, energy, tempo);
       }
 
-      // 더 자세한 에러 정보 로깅
-      console.error('Spotify API Error Details:', {
+      console.error('Spotify API Error:', {
         status: error.response?.status,
-        statusText: error.response?.statusText,
         data: error.response?.data,
         message: error.message,
       });
@@ -161,22 +287,18 @@ export class SpotifyService {
    * @throws {BadRequestException} 유효성 검증 실패 시
    */
   validateParameters(genres, valence, energy, tempo) {
-    // 장르 검증
     if (!genres || !Array.isArray(genres) || genres.length === 0) {
       throw new BadRequestException('장르는 최소 1개 이상이 필요합니다.');
     }
 
-    // valence 검증
     if (typeof valence !== 'number' || valence < 0 || valence > 1) {
       throw new BadRequestException('valence는 0~1 사이여야 합니다.');
     }
 
-    // energy 검증 (0~1)
     if (typeof energy !== 'number' || energy < 0 || energy > 1) {
       throw new BadRequestException('energy는 0~1 사이여야 합니다.');
     }
 
-    // tempo 검증 (0 초과)
     if (typeof tempo !== 'number' || tempo <= 0) {
       throw new BadRequestException('tempo는 0보다 커야 합니다.');
     }
