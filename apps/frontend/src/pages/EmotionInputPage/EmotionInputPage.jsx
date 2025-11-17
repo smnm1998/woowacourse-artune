@@ -18,7 +18,6 @@ function EmotionInputPage({ onNext }) {
   const handleSubmit = () => {
     if (!text.trim()) return;
 
-    console.log('제출된 텍스트: ', text);
     // TODO: 감정 분석 API 호출
     // TODO: 결과 페이지로 이동
     if (onNext) {
