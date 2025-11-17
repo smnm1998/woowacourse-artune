@@ -100,8 +100,13 @@ export class DalleService {
     // 장르 정보를 프롬프트에 통합
     const genreText = genres.join(', ');
 
-    return `A pixel_art style dessert representing the emotion of ${emotionLabel} (${emotion}).
-      The dessert should be ${style}, inspired by ${genreText} music genres.
-      Create a beautifully detailed pixel art dessert illustration with vibrant colors and appealing presentation.`;
+    return `A minimalist pixel art illustration with EXACTLY ONE BEVERAGE (drink) and EXACTLY ONE DESSERT (cake, pastry, or sweet treat).
+      MANDATORY: The image MUST contain both a drink and a dessert item, no exceptions.
+      The dessert should be ${style}, inspired by ${genreText} music genres, representing the emotion of ${emotionLabel} (${emotion}).
+      Simple, clean composition with ONLY these two items: one beverage + one dessert.
+      NO other elements, NO additional decorations, NO background objects, NO extra items.
+      Clean white or simple solid color background.
+      Beautifully detailed pixel art style with vibrant colors.
+      Remember: MUST include both drink AND dessert.`;
   }
 }
