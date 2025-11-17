@@ -41,6 +41,9 @@ export const vinylDiscStyle = css`
 
   // 회전 시 무지개 효과 강조
   transition: filter 0.3s ease;
+
+  // hover 방지
+  pointer-events: none;
 `;
 
 // CD 중앙 홀
