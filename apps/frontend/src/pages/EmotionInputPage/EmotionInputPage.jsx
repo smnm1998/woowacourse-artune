@@ -10,20 +10,25 @@ import {
 
 function EmotionInputPage({ onNext }) {
   const [text, setText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleTextChange = (e) => {
+    if (isSubmitting) return;
     setText(e.target.value);
   };
 
   const handleSubmit = () => {
-    if (!text.trim()) return;
+    if (!text.trim() || isSubmitting) return;
+
+    setIsSubmitting(true);
+    const textToSubmit = text;
+    setText('');
 
     // TODO: 감정 분석 API 호출
     // TODO: 결과 페이지로 이동
     if (onNext) {
-      onNext(text);
+      onNext(textToSubmit);
     }
-    setText('');
   };
 
   return (
