@@ -31,7 +31,7 @@ export class DalleService {
       const response = await axios.post(
         this.apiUrl,
         {
-          model: 'dall-e-3',
+          model: 'dall-e-2',
           prompt: prompt,
           n: 1,
           size: '1024x1024',
