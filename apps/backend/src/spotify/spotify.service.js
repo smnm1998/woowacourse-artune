@@ -80,7 +80,88 @@ export class SpotifyService {
   }
 
   /**
+   * 장르로 아티스트 검색
+   * @param {string} genre - 검색할 장르
+   * @param {number} limit - 가져올 아티스트 수 (기본 50)
+   * @returns {Promise<Array>} 아티스트 목록
+   */
+  async searchArtistByGenre(genre, limit = 50) {
+    if (!this.authenticated) {
+      await this.authenticate();
+    }
+
+    try {
+      const accessToken = this.spotifyApi.getAccessToken();
+
+      const response = await axios.get('https://api.spotify.com/v1/search', {
+        params: {
+          q: `genre:${genre}`,
+          type: 'artist',
+          limit: limit,
+          market: 'KR',
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      return response.data.artists.items;
+    } catch (error) {
+      console.error(`아티스트 검색 실패: (${genre}):`, error.message);
+      return [];
+    }
+  }
+
+  /**
+   * 아티스트의 인기 트랙 가져오기
+   *
+   * @param {string} artistId - 아티스트 Spotify ID
+   * @returns {Promise<Array>} 인기 트랙 목록 (최대 10개)
+   */
+  async getArtistTopTracks(artistId) {
+    if (!this.authenticated) {
+      await this.authenticate();
+    }
+
+    try {
+      const accessToken = this.spotifyApi.getAccessToken();
+
+      const response = await axios.get(
+        `https://api.spotify.com/v1/artists/${artistId}/top-tracks`,
+        {
+          params: {
+            market: 'KR',
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      return response.data.tracks;
+    } catch (error) {
+      console.error(`Top Tracks 가져오기 실패 (${artistId}): `, error.message);
+      return [];
+    }
+  }
+
+  /**
+   * 배열 무작위 셔플 (Fisher-Yates 알고리즘)
+   *
+   * @param {Array} array - 셔플할 배열
+   * @returns {Array} 셔플된 새 배열
+   */
+  shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+
+  /**
    * 여러 트랙의 Audio Features를 가져옴
+   *
    * @param {string[]} trackIds - 트랙 ID 배열 (최대 100개)
    * @returns {Promise<Object>} 트랙 ID별 audio features 맵
    */
@@ -91,7 +172,6 @@ export class SpotifyService {
 
     try {
       const accessToken = this.spotifyApi.getAccessToken();
-
       const response = await axios.get(
         'https://api.spotify.com/v1/audio-features',
         {
@@ -110,10 +190,9 @@ export class SpotifyService {
           featuresMap[trackIds[index]] = features;
         }
       });
-
       return featuresMap;
     } catch (error) {
-      console.error('Audio Features 가져오기 실패:', error.message);
+      console.error('Audio Features 가져오기 실패: ', error.message);
       return {};
     }
   }
@@ -143,72 +222,51 @@ export class SpotifyService {
 
     try {
       const accessToken = this.spotifyApi.getAccessToken();
-      const emotionKeywords = this.getEmotionKeywords(valence, energy);
 
-      // 가장 중요한 NOT 필터만 선택 (앰비언트, 클래식, 명상음악 제외)
-      const excludeKeywords = 'NOT classical NOT ambient NOT meditation';
-      const includeKeywords = 'artist';
+      // 장르로 아티스트 검색
+      let allArtists = [];
+      for (const genre of genres.slice(0, 2)) {
+        const artists = await this.searchArtistByGenre(genre, 50);
+        allArtists = allArtists.concat(artists);
+      }
 
-      // 장르는 최대 2개까지만 사용
-      const genreQuery = genres.slice(0, 2).join(' ');
+      // 인기 아티스트 필터링 (인기도 60 이상)
+      const popularArtists = allArtists.filter(
+        (artist) => artist.popularity >= 60,
+      );
 
-      const searchQuery = `${genreQuery} ${emotionKeywords} ${includeKeywords} ${excludeKeywords}`;
+      console.log(`인기 아티스트: ${popularArtists.length}명`);
 
-      const response = await axios.get('https://api.spotify.com/v1/search', {
-        params: {
-          q: searchQuery,
-          type: 'track',
-          limit: 50,
-          market: 'KR',
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      // 아티스트 셔플 (다양성 보장)
+      const shuffledArtists = this.shuffleArray(popularArtists);
 
-      const rawTracks = response.data.tracks.items;
+      // 각 아티스트의 top 10 중 랜덤 1곡 선택
+      const rawTracks = [];
+      for (const artist of shuffledArtists.slice(0, 30)) {
+        const topTracks = await this.getArtistTopTracks(artist.id);
 
-      // 컴필레이션 앨범 및 Various Artists 제외
-      const realArtistTracks = rawTracks.filter((track) => {
-        const artistName = track.artists[0]?.name?.toLowerCase() || '';
-        const albumType = track.album?.album_type;
-
-        // Various Artists, VA, 묶음 제외
-        if (
-          artistName.includes('various') ||
-          artistName === 'va' ||
-          artistName.includes('ost') ||
-          artistName.includes('compilation')
-        ) {
-          return false;
+        if (topTracks && topTracks.length > 0) {
+          // top 10 중 랜덤 선택
+          const randomIndex = Math.floor(
+            Math.random() * Math.min(topTracks.length, 10),
+          );
+          rawTracks.push(topTracks[randomIndex]);
         }
+      }
 
-        // 컴필레이션 앨범 제외
-        if (albumType === 'compilation') {
-          return false;
-        }
+      console.log(`수집된 트랙: ${rawTracks.length}개`);
 
-        return true;
-      });
-
-      // preview_url 통계 확인
-      const previewUrlStats = {
-        total: rawTracks.length,
-        withPreview: rawTracks.filter((t) => t.preview_url !== null).length,
-        withoutPreview: rawTracks.filter((t) => t.preview_url === null).length,
-      };
-
-      // 1단계: 트랙 필터링 (중복 제거 + 인기도)
-      const { tracks: filteredTracks, stats } = filterTracks(realArtistTracks, {
-        minPopularity: 50,
+      // 1. 트랙 필터링 (중복 제거 + 인기도)
+      const { tracks: filteredTracks, stats } = filterTracks(rawTracks, {
+        minPopularity: 55, // 50 → 55로 상향
         minResults: 40,
       });
 
-      // 2단계: Audio Features 가져오기
+      // 2. Audio Features 가져오기
       const trackIds = filteredTracks.map((track) => track.id);
       const audioFeaturesMap = await this.getAudioFeatures(trackIds);
 
-      // 3단계: 유사도 계산 및 정렬
+      // 3. 유사도 계산 및 정렬
       const tracksWithSimilarity = addSimilarityScores(
         filteredTracks,
         audioFeaturesMap,
@@ -222,17 +280,16 @@ export class SpotifyService {
       // instrumentalness 필터링 (보컬 없는 순수 연주곡 제외)
       const vocalTracks = sortedTracks.filter((item) => {
         const instrumentalness = item.audioFeatures?.instrumentalness;
-        // instrumentalness > 0.5: 순수 연주곡으로 간주하고 제외
         if (instrumentalness !== undefined && instrumentalness > 0.5) {
           return false;
         }
         return true;
       });
 
-      // 4단계: 아티스트 다양성 보장
+      // 4. 아티스트 다양성 보장
       const diverseTracks = ensureArtistDiversity(vocalTracks, 20, 2);
 
-      // 5단계: iTunes에서 preview URL 가져오기
+      // 5. iTunes에서 preview URL 가져오기
       const trackList = diverseTracks.map((item) => ({
         id: item.track.id,
         artistName: item.track.artists[0]?.name,
@@ -257,7 +314,7 @@ export class SpotifyService {
         return item;
       });
 
-      // 6단계: DTO 매핑
+      // 6. DTO 매핑
       return mapTracksToDTO(tracksWithItunes.map((item) => item.track));
     } catch (error) {
       if (error.response?.status === 401) {
