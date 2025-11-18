@@ -7,6 +7,8 @@ export const cardContainerStyle = css`
   gap: 12px;
   cursor: pointer;
   position: relative;
+  width: 100%;
+  height: 100%;
 `;
 
 // CD + 디스크 wrapper
@@ -82,6 +84,7 @@ export const albumCoverStyle = css`
     height: 100%;
     object-fit: cover;
     display: block;
+    background: ${colors.background.glass.subtle};
   }
 `;
 

@@ -30,6 +30,25 @@ function AlbumCard({ album, isHovered }) {
   // 아티스트명 합치기 (여러 명일 경우 쉼표 구분)
   const artistNames = album.artists.map((artists) => artists.name).join(', ');
 
+  // 이미지 로딩 에러 디버깅
+  if (!coverUrl || !album.album.images || album.album.images.length === 0) {
+    console.warn('⚠️ 이미지 없음:', {
+      trackName: album.name,
+      artist: artistNames,
+      images: album.album.images,
+    });
+  }
+
+  // 이미지 로드 에러 핸들러
+  const handleImageError = (e) => {
+    console.error('❌ 이미지 로드 실패:', {
+      trackName: album.name,
+      artist: artistNames,
+      imageUrl: coverUrl,
+    });
+    e.target.style.display = 'none';
+  };
+
   return (
     <div css={cardContainerStyle}>
       <div css={albumWrapperStyle}>
@@ -54,7 +73,29 @@ function AlbumCard({ album, isHovered }) {
           whileHover={{ scale: 1.05 }} // 확대
           transition={{ duration: 0.3 }}
         >
-          <img src={coverUrl} alt={album.name} />
+          {coverUrl ? (
+            <img
+              src={coverUrl}
+              alt={album.name}
+              onError={handleImageError}
+              loading="lazy"
+            />
+          ) : (
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: 'rgba(255, 255, 255, 0.5)',
+                fontSize: '12px',
+              }}
+            >
+              No Image
+            </div>
+          )}
         </motion.div>
       </div>
     </div>
