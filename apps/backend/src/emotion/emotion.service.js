@@ -126,4 +126,102 @@ export class EmotionService {
       },
     };
   }
+
+  /**
+   * 텍스트 분석 -> 감정 및 추천 음악 & 픽셀아트 디저트 이미지 생성 (진행률 콜백 포함)
+   *
+   * @param {string} text - 분석할 사용자 입력 텍스트
+   * @param {Function} onProgress - 진행률 콜백 함수 (progress: number, message: string)
+   * @returns {Promise<Object>} 프론트엔드 형식의 응답
+   * @throws {BadRequestException} 빈 텍스트가 입력된 경우
+   *
+   * 진행률 단계:
+   * - 0%: 시작
+   * - 10%: 감정 분석 시작
+   * - 30%: 감정 분석 완료
+   * - 40%: 음악 추천 시작
+   * - 60%: immerse 플레이리스트 완료
+   * - 80%: soothe 플레이리스트 완료
+   * - 95%: 디저트 이미지 생성 완료
+   * - 100%: 전체 완료
+   */
+  async analyzeAndRecommendWithProgress(text, onProgress) {
+    if (!text || text.trim() === '') {
+      throw new BadRequestException('분석할 텍스트가 필요합니다.');
+    }
+
+    // 시작 (0%)
+    onProgress(0, '감정 분석을 시작합니다...');
+
+    // OpenAI로 감정 분석 (10%~30%)
+    onProgress(10, '감정을 분석하고 있어요...');
+    const emotion = await this.openAIService.analyzeEmotion(text);
+    onProgress(30, '음악 추천을 준비하고 있어요...');
+
+    // Spotify 음악 추천 & DALLE 이미지 생성 (병렬 처리, 40%~100%)
+    onProgress(40, '당신의 감정에 맞는 음악을 찾고 있어요...');
+
+    const [immerseRecommendations, sootheRecommendations, dessertImage] =
+      await Promise.all([
+        // immerse 플레이리스트
+        this.spotifyService
+          .getRecommendations(
+            emotion.immerse.genres,
+            emotion.immerse.valence,
+            emotion.immerse.energy,
+            emotion.immerse.tempo,
+          )
+          .then((result) => {
+            onProgress(60, '감정 심취 플레이리스트를 만들었어요...');
+            return result;
+          }),
+        // soothe 플레이리스트
+        this.spotifyService
+          .getRecommendations(
+            emotion.soothe.genres,
+            emotion.soothe.valence,
+            emotion.soothe.energy,
+            emotion.soothe.tempo,
+          )
+          .then((result) => {
+            onProgress(80, '감정 완화 플레이리스트를 만들었어요...');
+            return result;
+          }),
+        // DALLE 디저트 이미지
+        this.dalleService
+          .generateDessertImage(
+            emotion.emotion,
+            emotion.emotionLabel,
+            emotion.immerse.genres,
+          )
+          .then((result) => {
+            onProgress(95, '특별한 디저트를 준비했어요...');
+            return result;
+          }),
+      ]);
+
+    onProgress(100, '완료!');
+
+    // 프론트엔드 형식으로 변환
+    return {
+      emotionLabel: emotion.emotionLabel,
+      description: emotion.description,
+      artwork: {
+        url: dessertImage.imageUrl,
+        prompt: dessertImage.prompt,
+      },
+      playlists: {
+        immerse: {
+          modeLabel: '감정 심취',
+          description: this.getImmerseDescription(emotion.emotionLabel),
+          tracks: immerseRecommendations.map(mapToFrontendTrack),
+        },
+        soothe: {
+          modeLabel: '감정 완화',
+          description: this.getSootheDescription(emotion.emotionLabel),
+          tracks: sootheRecommendations.map(mapToFrontendTrack),
+        },
+      },
+    };
+  }
 }
