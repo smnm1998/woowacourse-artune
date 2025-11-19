@@ -5,6 +5,7 @@ export const API_BASE_URL =
 // API 엔드포인트
 export const API_ENDPOINTS = {
   ANALYZE_EMOTION: '/api/emotion/analyze',
+  ANALYZE_EMOTION_STREAM: '/api/emotion/analyze-stream',
 };
 
 // HTTP 요청 타임아웃
