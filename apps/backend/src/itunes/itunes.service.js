@@ -26,19 +26,44 @@ export class ITunesService {
           term: `${artistName} ${trackName}`,
           media: 'music',
           entity: 'song',
-          limit: 1,
+          limit: 10,
           country: 'kr',
         },
         timeout: 5000,
       });
 
       const results = response.data.results;
-      if (results && results.length > 0 && results[0].previewUrl) {
-        return results[0].previewUrl;
+      if (!results || results.length === 0) {
+        return null;
       }
 
-      return null;
+      // Spotify의 정보와 iTunes 결과를 비교하기 위한 정규화 값
+      const targetArtist = this.normalize(artistName);
+      const targetTrack = this.normalize(trackName);
+
+      // 결과 목록 중에서 가수와 제목이 일치하는 것 찾기
+      const bestMatch = results.find((item) => {
+        const itemArtist = this.normalize(item.artistName);
+        const itemTrack = this.normalize(item.trackName);
+
+        // 정확도 높은 매칭: 가수가 포함되고, 제목도 포함되는 경우
+        // (iTunes는 가끔 'Feat.' 정보를 제목이나 가수에 섞어서 줌)
+        const isArtistMatch =
+          itemArtist.includes(targetArtist) ||
+          targetArtist.includes(itemArtist);
+        const isTrackMatch =
+          itemTrack.includes(targetTrack) || targetTrack.includes(itemTrack);
+
+        return isArtistMatch && isTrackMatch && item.previewUrl;
+      });
+
+      // 일치하는 결과가 있으면 반환, 없으면 null (엉뚱한 노래 재생 방지)
+      return bestMatch ? bestMatch.previewUrl : null;
     } catch (error) {
+      console.error(
+        `iTunes API error: ${artistName} - ${trackName}`,
+        error.message,
+      );
       return null;
     }
   }
