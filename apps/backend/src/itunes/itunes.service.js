@@ -13,59 +13,46 @@ export class ITunesService {
   static BASE_URL = 'https://itunes.apple.com/search';
 
   /**
-   * 아티스트명과 트랙명으로 preview URL 검색
+   * 아티스트명과 트랙명으로 preview URL 검색 (국가별 순차 검색 적용)
+   * 우선순위: 한국(kr) -> 일본(jp) -> 미국(us)
    *
    * @param {string} artistName - 아티스트 이름
    * @param {string} trackName - 트랙 이름
    * @returns {Promise<string|null>} 30초 미리듣기 URL
    */
   async getPreviewUrl(artistName, trackName) {
-    try {
-      const response = await axios.get(ITunesService.BASE_URL, {
-        params: {
-          term: `${artistName} ${trackName}`,
-          media: 'music',
-          entity: 'song',
-          limit: 10,
-          country: 'kr',
-        },
-        timeout: 5000,
-      });
+    // 검색할 국가 순서
+    const countries = ['kr', 'jp', 'us'];
 
-      const results = response.data.results;
-      if (!results || results.length === 0) {
-        return null;
+    for (const country of countries) {
+      try {
+        const response = await axios.get(ITunesService.BASE_URL, {
+          params: {
+            term: `${artistName} ${trackName}`,
+            media: 'music',
+            entity: 'song',
+            limit: 1, // 가장 연관성 높은 1개만 조회
+            country: country,
+          },
+          timeout: 5000,
+        });
+
+        const results = response.data.results;
+        if (results && results.length > 0 && results[0].previewUrl) {
+          // 찾았으면 바로 반환 (다음 국가 검색 안 함)
+          return results[0].previewUrl;
+        }
+      } catch (error) {
+        // 해당 국가에서 에러 발생 시(404, 403 등) 무시하고 다음 국가로 진행
+        continue;
       }
-
-      // Spotify의 정보와 iTunes 결과를 비교하기 위한 정규화 값
-      const targetArtist = this.normalize(artistName);
-      const targetTrack = this.normalize(trackName);
-
-      // 결과 목록 중에서 가수와 제목이 일치하는 것 찾기
-      const bestMatch = results.find((item) => {
-        const itemArtist = this.normalize(item.artistName);
-        const itemTrack = this.normalize(item.trackName);
-
-        // 정확도 높은 매칭: 가수가 포함되고, 제목도 포함되는 경우
-        // (iTunes는 가끔 'Feat.' 정보를 제목이나 가수에 섞어서 줌)
-        const isArtistMatch =
-          itemArtist.includes(targetArtist) ||
-          targetArtist.includes(itemArtist);
-        const isTrackMatch =
-          itemTrack.includes(targetTrack) || targetTrack.includes(itemTrack);
-
-        return isArtistMatch && isTrackMatch && item.previewUrl;
-      });
-
-      // 일치하는 결과가 있으면 반환, 없으면 null (엉뚱한 노래 재생 방지)
-      return bestMatch ? bestMatch.previewUrl : null;
-    } catch (error) {
-      console.error(
-        `iTunes API error: ${artistName} - ${trackName}`,
-        error.message,
-      );
-      return null;
     }
+
+    // 모든 국가에서 실패한 경우
+    console.error(
+      `iTunes API failed: ${artistName} - ${trackName} (Not found in KR, JP, US)`,
+    );
+    return null;
   }
 
   /**
@@ -86,8 +73,8 @@ export class ITunesService {
         previewMap.set(track.id, previewUrl);
       }
 
-      // Rate Limit 고려
-      await new Promise((resolve) => setTimeout(resolve, 60));
+      // 국가별로 최대 3번까지 요청할 수 있으므로 딜레이를 약간 넉넉하게 조정 (권장)
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     return previewMap;

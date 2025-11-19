@@ -229,7 +229,7 @@ export class SpotifyService {
         throw new Error('Spotify API 호출 실패: 아티스트를 찾을 수 없습니다.');
       }
 
-      // 인기 아티스트 필터링 (인기도 60 이상)
+      // 인기 아티스트 필터링 (인기도 50 이상)
       const popularArtists = allArtists.filter(
         (artist) => artist.popularity >= 50,
       );
