@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { useHover } from '@/hooks';
-import AlbumCard from '@/components/AlbumCard';
-import AlbumHoverModal from '@/components/AlbumHoverModal';
+import { AlbumCard, AlbumHoverModal } from '@/components';
 import { gridContainerStyle } from './AlbumGrid.styles';
 
 /**
