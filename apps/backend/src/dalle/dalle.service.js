@@ -23,34 +23,57 @@ export class DalleService {
     // 유효성 검사
     this.validateParameters(emotion, emotionLabel, genres);
 
-    // 프롬프트 생성
+    // 프롬프트 생성 (실제 생성은 안 하더라도 로그나 디버깅용으로 남겨둠)
     const prompt = this.createDessertPrompt(emotion, emotionLabel, genres);
 
-    try {
-      // DALL-E API
-      const response = await axios.post(
-        this.apiUrl,
-        {
-          model: 'dall-e-2',
-          prompt: prompt,
-          n: 1,
-          size: '1024x1024',
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${this.apiKey}`,
-            'Content-Type': 'application/json',
-          },
-        },
-      );
+    // DALL-E API 호출 대신 정적 이미지 매핑 사용
+    // 이미지는 apps/frontend/public/artwork/ 폴더에 저장되어 있어야 합니다.
+    const staticImages = {
+      joy: '/artwork/joy.png',
+      sadness: '/artwork/sadness.png',
+      anger: '/artwork/anger.png',
+      fear: '/artwork/fear.png',
+      surprise: '/artwork/surprise.png',
+      neutral: '/artwork/neutral.png',
+      disgust: '/artwork/disgust.png',
+    };
 
-      return {
-        imageUrl: response.data.data[0].url,
-        prompt: prompt,
-      };
-    } catch (error) {
-      throw new Error(`DALL-E 이미지 생성 실패: ${error.message}`);
-    }
+    // 해당 감정의 이미지가 없으면 플레이스홀더 이미지 반환
+    const imageUrl =
+      staticImages[emotion] ||
+      'https://via.placeholder.com/1024x1024?text=Default+Artwork';
+
+    // API 호출 비용 절약을 위해 바로 리턴
+    return {
+      imageUrl: imageUrl,
+      prompt: prompt,
+    };
+
+    // try {
+    //   // DALL-E API
+    //   const response = await axios.post(
+    //     this.apiUrl,
+    //     {
+    //       model: 'dall-e-2',
+    //       prompt: prompt,
+    //       n: 1,
+    //       size: '1024x1024',
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${this.apiKey}`,
+    //         'Content-Type': 'application/json',
+    //       },
+    //     },
+    //   );
+
+    //   return {
+    //     imageUrl: response.data.data[0].url,
+    //     prompt: prompt,
+    //   };
+    // } catch (error) {
+    //   throw new Error(`DALL-E 이미지 생성 실패: ${error.message}`);
+    // }
   }
 
   /**
