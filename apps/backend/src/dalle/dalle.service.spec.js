@@ -59,7 +59,7 @@ describe('DalleService', () => {
 
       // Then
       expect(result.imageUrl).toBe('https://example.com/generated-dessert.png');
-      expect(result.prompt).toContain('pixel_art');
+      expect(result.prompt).toContain('pixel art');
       expect(result.prompt).toContain('dessert');
       expect(result.prompt).toContain('기쁨');
 
@@ -67,7 +67,7 @@ describe('DalleService', () => {
       expect(axios.post).toHaveBeenCalledWith(
         'https://api.openai.com/v1/images/generations',
         expect.objectContaining({
-          model: 'dall-e-3',
+          model: 'dall-e-2',
           prompt: expect.stringContaining('pixel art'),
           n: 1,
           size: '1024x1024',
