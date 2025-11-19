@@ -3,10 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import SpotifyWebApi from 'spotify-web-api-node';
 import axios from 'axios';
 import { filterTracks } from './utils/track-filter.util.js';
-import {
-  addSimilarityScores,
-  sortBySimlilarityAndPopularity,
-} from './utils/audio-similarity.util.js';
 import { ensureArtistDiversity } from './utils/artist-diversity.util.js';
 import { mapTracksToDTO } from './utils/track-mapper.util.js';
 import { ITunesService } from '../itunes/itunes.service.js';
@@ -43,7 +39,6 @@ export class SpotifyService {
       this.spotifyApi.setAccessToken(data.body.access_token);
       this.authenticated = true;
     } catch (error) {
-      console.error('Spotify 인증 실패:', error);
       throw new Error(`Spotify 인증 에러: ${error.message}`);
     }
   }
@@ -85,7 +80,7 @@ export class SpotifyService {
    * @param {number} limit - 가져올 아티스트 수 (기본 50)
    * @returns {Promise<Array>} 아티스트 목록
    */
-  async searchArtistByGenre(genre, limit = 50) {
+  async searchArtistsByGenre(genre, limit = 50) {
     if (!this.authenticated) {
       await this.authenticate();
     }
@@ -107,8 +102,8 @@ export class SpotifyService {
 
       return response.data.artists.items;
     } catch (error) {
-      console.error(`아티스트 검색 실패: (${genre}):`, error.message);
-      return [];
+      // 에러를 상위로 전파 (getRecommendations에서 401 처리)
+      throw error;
     }
   }
 
@@ -137,10 +132,11 @@ export class SpotifyService {
           },
         },
       );
+
       return response.data.tracks;
     } catch (error) {
-      console.error(`Top Tracks 가져오기 실패 (${artistId}): `, error.message);
-      return [];
+      // 에러를 상위로 전파 (getRecommendations에서 401 처리)
+      throw error;
     }
   }
 
@@ -192,7 +188,6 @@ export class SpotifyService {
       });
       return featuresMap;
     } catch (error) {
-      console.error('Audio Features 가져오기 실패: ', error.message);
       return {};
     }
   }
@@ -226,16 +221,18 @@ export class SpotifyService {
       // 장르로 아티스트 검색
       let allArtists = [];
       for (const genre of genres.slice(0, 2)) {
-        const artists = await this.searchArtistByGenre(genre, 50);
+        const artists = await this.searchArtistsByGenre(genre, 50);
         allArtists = allArtists.concat(artists);
+      }
+
+      if (allArtists.length === 0) {
+        throw new Error('Spotify API 호출 실패: 아티스트를 찾을 수 없습니다.');
       }
 
       // 인기 아티스트 필터링 (인기도 60 이상)
       const popularArtists = allArtists.filter(
-        (artist) => artist.popularity >= 60,
+        (artist) => artist.popularity >= 50,
       );
-
-      console.log(`인기 아티스트: ${popularArtists.length}명`);
 
       // 아티스트 셔플 (다양성 보장)
       const shuffledArtists = this.shuffleArray(popularArtists);
@@ -243,53 +240,39 @@ export class SpotifyService {
       // 각 아티스트의 top 10 중 랜덤 1곡 선택
       const rawTracks = [];
       for (const artist of shuffledArtists.slice(0, 30)) {
-        const topTracks = await this.getArtistTopTracks(artist.id);
+        try {
+          const topTracks = await this.getArtistTopTracks(artist.id);
 
-        if (topTracks && topTracks.length > 0) {
-          // top 10 중 랜덤 선택
-          const randomIndex = Math.floor(
-            Math.random() * Math.min(topTracks.length, 10),
-          );
-          rawTracks.push(topTracks[randomIndex]);
+          if (topTracks && topTracks.length > 0) {
+            // top 10 중 랜덤 선택
+            const randomIndex = Math.floor(
+              Math.random() * Math.min(topTracks.length, 10),
+            );
+            rawTracks.push(topTracks[randomIndex]);
+          }
+        } catch (error) {
+          // 401 에러는 상위로 전파, 다른 에러는 무시하고 계속
+          if (error.response?.status === 401) {
+            throw error;
+          }
         }
       }
 
-      console.log(`수집된 트랙: ${rawTracks.length}개`);
-
       // 1. 트랙 필터링 (중복 제거 + 인기도)
       const { tracks: filteredTracks, stats } = filterTracks(rawTracks, {
-        minPopularity: 55, // 50 → 55로 상향
+        minPopularity: 55,
         minResults: 40,
       });
 
-      // 2. Audio Features 가져오기
-      const trackIds = filteredTracks.map((track) => track.id);
-      const audioFeaturesMap = await this.getAudioFeatures(trackIds);
+      // 2. 인기도 순으로 정렬 (Audio Features API deprecated로 인한 변경)
+      const sortedTracks = filteredTracks
+        .map((track) => ({ track }))
+        .sort((a, b) => b.track.popularity - a.track.popularity);
 
-      // 3. 유사도 계산 및 정렬
-      const tracksWithSimilarity = addSimilarityScores(
-        filteredTracks,
-        audioFeaturesMap,
-        valence,
-        energy,
-        tempo,
-      );
+      // 3. 아티스트 다양성 보장
+      const diverseTracks = ensureArtistDiversity(sortedTracks, 20, 2);
 
-      const sortedTracks = sortBySimlilarityAndPopularity(tracksWithSimilarity);
-
-      // instrumentalness 필터링 (보컬 없는 순수 연주곡 제외)
-      const vocalTracks = sortedTracks.filter((item) => {
-        const instrumentalness = item.audioFeatures?.instrumentalness;
-        if (instrumentalness !== undefined && instrumentalness > 0.5) {
-          return false;
-        }
-        return true;
-      });
-
-      // 4. 아티스트 다양성 보장
-      const diverseTracks = ensureArtistDiversity(vocalTracks, 20, 2);
-
-      // 5. iTunes에서 preview URL 가져오기
+      // 4. iTunes에서 preview URL 가져오기
       const trackList = diverseTracks.map((item) => ({
         id: item.track.id,
         artistName: item.track.artists[0]?.name,
@@ -314,19 +297,13 @@ export class SpotifyService {
         return item;
       });
 
-      // 6. DTO 매핑
+      // 5. DTO 매핑
       return mapTracksToDTO(tracksWithItunes.map((item) => item.track));
     } catch (error) {
       if (error.response?.status === 401) {
         await this.authenticate();
         return this.getRecommendations(genres, valence, energy, tempo);
       }
-
-      console.error('Spotify API Error:', {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message,
-      });
 
       throw new Error(
         `Spotify API 호출 실패: ${error.response?.data?.error?.message || error.message}`,

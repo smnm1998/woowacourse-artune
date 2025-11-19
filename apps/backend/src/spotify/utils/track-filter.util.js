@@ -37,10 +37,10 @@ export function removeDuplicateAlbums(tracks) {
  * 인기도 기반 필터링
  *
  * @param {Array} tracks - 트랙 배열
- * @param {number} minPopularity - 최소 인기도 (기본값: 50)
+ * @param {number} minPopularity - 최소 인기도 (기본값: 40)
  * @returns {Array} 필터링된 트랙 배열
  */
-export function filterByPopularity(tracks, minPopularity = 50) {
+export function filterByPopularity(tracks, minPopularity = 40) {
   return tracks.filter((track) => track.popularity >= minPopularity);
 }
 
@@ -52,7 +52,7 @@ export function filterByPopularity(tracks, minPopularity = 50) {
  * @returns {Object} 필터링 결과 및 로그
  */
 export function filterTracks(tracks, options = {}) {
-  const { minPopularity = 35, minResults = 20 } = options;
+  const { minPopularity = 40, minResults = 20 } = options;
 
   const uniqueTracks = removeDuplicateTracks(tracks);
   const uniqueAlbums = removeDuplicateAlbums(uniqueTracks);

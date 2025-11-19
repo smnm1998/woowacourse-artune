@@ -39,10 +39,6 @@ export class ITunesService {
 
       return null;
     } catch (error) {
-      console.error(
-        `iTunes API error: ${artistName} - ${trackName}`,
-        error.message,
-      );
       return null;
     }
   }
