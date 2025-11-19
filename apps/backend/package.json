@@ -7,7 +7,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "format": "prettier --write \"**/*.js\"",
+    "prebuild": "rimraf dist",
+    "build": "babel src --out-dir dist --copy-files",
     "start": "babel-node index.js",
+    "start:prod": "node dist/main.js",
     "dev": "nodemon",
     "test": "jest",
     "test:cov": "jest --coverage",
@@ -27,6 +30,7 @@
     "spotify-web-api-node": "^5.0.2"
   },
   "devDependencies": {
+    "@babel/cli": "^7.28.3",
     "@babel/core": "7.28.4",
     "@babel/node": "7.28.0",
     "@babel/plugin-proposal-decorators": "7.28.0",
@@ -39,6 +43,7 @@
     "jest": "^30.2.0",
     "nodemon": "3.1.10",
     "prettier": "3.6.2",
+    "rimraf": "^3.0.2",
     "supertest": "7.1.4"
   },
   "jest": {
