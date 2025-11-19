@@ -30,22 +30,9 @@ function AlbumCard({ album, isHovered }) {
   // 아티스트명 합치기 (여러 명일 경우 쉼표 구분)
   const artistNames = album.artists.map((artists) => artists.name).join(', ');
 
-  // 이미지 로딩 에러 디버깅
-  if (!coverUrl || !album.album.images || album.album.images.length === 0) {
-    console.warn('⚠️ 이미지 없음:', {
-      trackName: album.name,
-      artist: artistNames,
-      images: album.album.images,
-    });
-  }
-
-  // 이미지 로드 에러 핸들러
+  // 이미지 로딩 에러 핸들러
   const handleImageError = (e) => {
-    console.error('❌ 이미지 로드 실패:', {
-      trackName: album.name,
-      artist: artistNames,
-      imageUrl: coverUrl,
-    });
+    console.error('앨범 이미지 로드 실패:', album.name);
     e.target.style.display = 'none';
   };
 

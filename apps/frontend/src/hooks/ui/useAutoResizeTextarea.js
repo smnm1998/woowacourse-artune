@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
  * @param {string} value - textarea의 값 (의존성)
  * @returns {React.RefObject} textarea에 연결한 ref
  */
-function useAuthResizeTextarea(value) {
+function useAutoResizeTextarea(value) {
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -18,4 +18,4 @@ function useAuthResizeTextarea(value) {
   return textareaRef;
 }
 
-export default useAuthResizeTextarea;
+export default useAutoResizeTextarea;

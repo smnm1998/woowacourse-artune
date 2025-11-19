@@ -56,8 +56,12 @@ function useAudioScratch({
 
       if (progress < 1 && !audio.paused) {
         // playbackRate: 초기 속도 -> minPlaybackRate (속도 감소)
-        const targetRate = initialRate - progress * (initialRate - minPlaybackRate);
-        audio.playbackRate = Math.max(minPlaybackRate, Math.min(initialRate, targetRate));
+        const targetRate =
+          initialRate - progress * (initialRate - minPlaybackRate);
+        audio.playbackRate = Math.max(
+          minPlaybackRate,
+          Math.min(initialRate, targetRate),
+        );
 
         // volume: 초기 볼륨 -> 0 (볼륨 페이드아웃)
         const targetVolume = initialVolume * (1.0 - progress);
@@ -138,14 +142,12 @@ function useAudioScratch({
               setError(null);
             })
             .catch((err) => {
-              console.error('재생 실패:', err);
               setIsPlaying(false);
               setError(err.message);
             });
         };
 
         const handleError = (e) => {
-          console.error('오디오 로드 에러:', e);
           setIsPlaying(false);
           setError('오디오 로드 실패');
         };

@@ -46,7 +46,7 @@ function AlbumHoverModal({ isOpen, album }) {
               <div css={albumInfoStyle}>
                 <p css={albumTitleStyle}>{album.album.name}</p>
                 <p css={artistNameStyle}>{artistNames}</p>
-                <p css={trackNameStyle}>대표곡: {album.name}</p>
+                <p css={trackNameStyle}>추천곡: {album.name}</p>
               </div>
 
               <div css={playingIndicatorStyle}>

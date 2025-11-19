@@ -12,13 +12,6 @@ export const containerStyle = css`
   align-items: flex-start;
 `;
 
-export const contentWrapperStyle = css`
-  display: flex;
-  margin: 0 auto;
-  gap: 60px; // 좌우 간격
-  align-items: flex-start;
-`;
-
 // 왼쪽 섹션 (아트워크 + 액션버튼) - 글래스모피즘 + 고정
 export const leftSectionStyle = css`
   flex: 0 0 480px; // 고정 너비
@@ -57,11 +50,4 @@ export const rightSectionStyle = css`
   margin: 0 auto; // 중앙 정렬
   min-height: 100vh;
   padding-bottom: 60px;
-`;
-
-// 하단 액션 버튼 영역
-export const actionSectionStyle = css`
-  width: 100%;
-  max-width: 1200px;
-  margin-top: 40px;
 `;
