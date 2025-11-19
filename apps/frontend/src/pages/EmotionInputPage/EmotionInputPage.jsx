@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import EmotionInput from '@/components/EmotionInput';
+import { EmotionInput } from '@/components';
 import {
   containerStyle,
   titleWrapperStyle,
@@ -7,8 +7,14 @@ import {
   subTitleStyle,
   inputWrapperStyle,
 } from './EmotionInputPage.styles';
+import useAppStore from '@/stores/useAppStore';
 
-function EmotionInputPage({ onNext }) {
+/**
+ * 감정 입력 페이지
+ * 사용자로부터 감정 텍스트를 입력받아 Zustand store의 analyzeEmotion을 호출
+ */
+function EmotionInputPage() {
+  const analyzeEmotion = useAppStore((state) => state.analyzeEmotion);
   const [text, setText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -17,18 +23,18 @@ function EmotionInputPage({ onNext }) {
     setText(e.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!text.trim() || isSubmitting) return;
 
     setIsSubmitting(true);
     const textToSubmit = text;
     setText('');
 
-    // TODO: 감정 분석 API 호출
-    // TODO: 결과 페이지로 이동
-    if (onNext) {
-      onNext(textToSubmit);
-    }
+    // Store에서 직접 호출
+    await analyzeEmotion(textToSubmit);
+
+    // 완료 후 submitting 상태 해제 (에러 발생도 포함)
+    setIsSubmitting(false);
   };
 
   return (

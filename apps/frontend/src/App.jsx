@@ -1,56 +1,35 @@
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import EmotionInputPage from '@/pages/EmotionInputPage';
-import Loading from '@/components/Loading';
+import { Loading, ErrorToast } from '@/components';
 import ResultPage from '@/pages/ResultPage';
-import ErrorToast from '@/components/ErrorToast';
-import { useEmotionAnalysis } from '@/hooks';
+import useAppStore from '@/stores/useAppStore';
 
 /**
  * 메인 애플리케이션 컴포넌트
- * 페이지 전환 및 감정 분석 플로우 관리
+ * 페이지 전환 및 감정 분석 플로우를 Zustand로 관리
  */
 function App() {
-  const [currentPage, setCurrentPage] = useState('input');
-  const { isLoading, progress, result, error, analyze, clearError, reset } =
-    useEmotionAnalysis();
+  // Zustand store에서 필요한 상태와 액션 선택
+  const currentPage = useAppStore((state) => state.currentPage);
+  const progress = useAppStore((state) => state.progress);
+  const error = useAppStore((state) => state.error);
+  const clearError = useAppStore((state) => state.clearError);
+  const setPage = useAppStore((state) => state.setPage);
 
   /**
-   * 감정 입력 제출 핸들러
-   *
-   * @param {string} text - 사용자가 입력한 텍스트
+   * 에러 재시도 핸들러
    */
-  const handleEmotionSubmit = async (text) => {
-    setCurrentPage('loading');
-    await analyze(text);
+  const handleRetry = () => {
+    clearError();
+    setPage('input');
   };
 
   /**
    * 로딩 완료 핸들러
-   * 진행률이 100%에 도달하면 결과 페이지로 전환
+   * Loading 컴포넌트의 애니메이션이 완료되면 결과 페이지로 전환
    */
   const handleLoadingComplete = () => {
-    if (result) {
-      setCurrentPage('result');
-    }
-  };
-
-  /**
-   * 다시하기 핸들러
-   * 모든 상태를 초기화하고 입력 페이지로 돌아감
-   */
-  const handleRestart = () => {
-    setCurrentPage('input');
-    reset();
-  };
-
-  /**
-   * 에러 재시도 핸들러
-   * 에러를 초기화하고 입력 페이지로 돌아감
-   */
-  const handleRetry = () => {
-    clearError();
-    setCurrentPage('input');
+    setPage('result');
   };
 
   return (
@@ -76,7 +55,7 @@ function App() {
             transition={{ duration: 0.5, ease: 'easeOut' }}
             style={{ position: 'absolute', width: '100%', height: '100%' }}
           >
-            <EmotionInputPage onNext={handleEmotionSubmit} />
+            <EmotionInputPage />
           </motion.div>
         )}
 
@@ -93,7 +72,7 @@ function App() {
         )}
 
         {/* 결과 페이지 */}
-        {currentPage === 'result' && result && (
+        {currentPage === 'result' && (
           <motion.div
             key="result"
             initial={{ opacity: 0 }}
@@ -106,7 +85,7 @@ function App() {
               overflow: 'auto',
             }}
           >
-            <ResultPage emotionResult={result} onRestart={handleRestart} />
+            <ResultPage />
           </motion.div>
         )}
       </AnimatePresence>
