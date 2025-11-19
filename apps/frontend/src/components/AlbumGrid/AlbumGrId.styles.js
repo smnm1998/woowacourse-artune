@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { colors } from '@/styles/theme';
 
 export const gridContainerStyle = css`
   display: grid;
