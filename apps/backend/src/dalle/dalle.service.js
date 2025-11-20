@@ -36,6 +36,12 @@ export class DalleService {
       surprise: '/artwork/surprise.png',
       neutral: '/artwork/neutral.png',
       disgust: '/artwork/disgust.png',
+      sentimental: '/artwork/sentimental.png',
+      excited: '/artwork/excited.png',
+      lonely: '/artwork/lonely.png',
+      dreamy: '/artwork/dreamy.png',
+      confident: '/artwork/confident.png',
+      romance: '/artwork/romance.png',
     };
 
     // 해당 감정의 이미지가 없으면 플레이스홀더 이미지 반환
