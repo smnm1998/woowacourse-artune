@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { colors } from '@/styles/theme';
+import { TABLET_BP, MOBILE_BP } from '@/constants/size';
 
 export const textareaContainerStyle = css`
   position: relative;
@@ -59,6 +60,14 @@ export const textareaStyle = css`
   &::-webkit-scrollbar-thumb:hover {
     background: ${colors.accent.primary.base};
   }
+
+  @media (max-width: ${TABLET_BP}) {
+    font-size: 20px;
+  }
+
+  @media (max-width: ${MOBILE_BP}) {
+    font-size: 16px;
+  }
 `;
 
 export const sendButtonStyle = css`
@@ -96,5 +105,16 @@ export const sendButtonStyle = css`
     color: ${colors.text.disabled};
     cursor: not-allowed;
     transform: none;
+  }
+
+  @media (max-width: ${MOBILE_BP}) {
+    width: 55px;
+    height: 55px;
+  }
+`;
+
+export const sendButtonIconStyle = css`
+  @media (max-width: ${MOBILE_BP}) {
+    font-size: 14px;
   }
 `;

@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { colors } from '@/styles/theme';
+import { MOBILE_BP } from '@/constants/size';
 
 export const containerStyle = css`
   display: flex;
@@ -25,6 +26,10 @@ export const titleStyle = css`
   font-weight: 700;
   margin: 0;
   color: ${colors.text.primary};
+
+  @media (max-width: ${MOBILE_BP}) {
+    font-size: 32px;
+  }
 `;
 
 export const subTitleStyle = css`
@@ -32,6 +37,10 @@ export const subTitleStyle = css`
   font-weight: 700;
   color: ${colors.text.primary};
   opacity: 0.6;
+
+  @media (max-width: ${MOBILE_BP}) {
+    font-size: 18px;
+  }
 `;
 
 export const inputWrapperStyle = css`

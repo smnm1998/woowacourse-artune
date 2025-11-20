@@ -4,6 +4,7 @@ import {
   textareaContainerStyle,
   textareaStyle,
   sendButtonStyle,
+  sendButtonIconStyle,
 } from './EmotionInput.styles';
 
 /**
@@ -29,6 +30,9 @@ function EmotionInput({ value, onChange, onSubmit, placeholder }) {
   return (
     <div css={textareaContainerStyle}>
       <textarea
+        id="emotion-input"
+        name="emotion"
+        aria-label="감정 입력"
         ref={textareaRef}
         css={textareaStyle}
         value={value}
@@ -47,7 +51,7 @@ function EmotionInput({ value, onChange, onSubmit, placeholder }) {
         disabled={!value.trim()}
         aria-label="전송"
       >
-        <IoSend />
+        <IoSend css={sendButtonIconStyle} />
       </button>
     </div>
   );

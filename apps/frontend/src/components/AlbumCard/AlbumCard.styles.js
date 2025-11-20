@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { colors } from '@/styles/theme';
-import { TABLET_BP } from '@/constants/size';
+import { TABLET_BP, MOBILE_BP } from '@/constants/size';
 
 export const cardContainerStyle = css`
   display: flex;
@@ -15,7 +15,7 @@ export const cardContainerStyle = css`
   -webkit-tap-highlight-color: transparent;
 `;
 
-// 앨범 + LP판 래퍼
+// 앨범 + CD 래퍼
 export const albumWrapperStyle = css`
   position: relative;
   width: 100%;
@@ -23,7 +23,7 @@ export const albumWrapperStyle = css`
   overflow: visible;
 `;
 
-// LP 디스크 (모바일에서는 숨김 처리)
+// CD (모바일에서는 숨김 처리)
 export const vinylDiscStyle = css`
   position: absolute;
   top: 0;
@@ -44,13 +44,13 @@ export const vinylDiscStyle = css`
   transition: filter 0.3s ease;
   pointer-events: none;
 
-  /* [Mobile] 공간 효율을 위해 LP 장식 숨김 */
+  /* [Mobile] 공간 효율을 위해 CD 장식 숨김 */
   @media (max-width: ${TABLET_BP}) {
     display: none;
   }
 `;
 
-// LP 중앙 홀
+// CD 중앙 홀
 export const vinylCenterStyle = css`
   position: absolute;
   top: 50%;
@@ -96,6 +96,10 @@ export const albumNameStyle = css`
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @media (max-width: ${MOBILE_BP}) {
+    font-size: 12px;
+  }
 `;
 
 export const artistNameStyle = css`
@@ -106,4 +110,8 @@ export const artistNameStyle = css`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @media (max-width: ${MOBILE_BP}) {
+    font-size: 10px;
+  }
 `;

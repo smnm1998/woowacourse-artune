@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { colors } from '@/styles/theme';
+import { MOBILE_BP } from '@/constants/size';
 
 export const modalOverlayStyle = css`
   position: absolute;
@@ -38,6 +39,10 @@ export const albumTitleStyle = css`
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @media (max-width: ${MOBILE_BP}) {
+    font-size: 14px;
+  }
 `;
 
 // 앨범 정보
@@ -61,6 +66,10 @@ export const artistNameStyle = css`
   font-weight: 500;
   color: ${colors.text.secondary};
   line-height: 1.3;
+
+  @media (max-width: ${MOBILE_BP}) {
+    font-size: 13px;
+  }
 `;
 
 // 대표곡
@@ -74,6 +83,10 @@ export const trackNameStyle = css`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @media (max-width: ${MOBILE_BP}) {
+    font-size: 12px;
+  }
 `;
 
 // 재생 중 표시
@@ -97,5 +110,9 @@ export const playingIndicatorStyle = css`
     50% {
       opacity: 0.6;
     }
+  }
+
+  @media (max-width: ${MOBILE_BP}) {
+    font-size: 10px;
   }
 `;
