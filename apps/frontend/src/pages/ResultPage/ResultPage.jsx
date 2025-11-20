@@ -6,6 +6,7 @@ import {
   PlaylistToggle,
   AlbumGrid,
   ActionButtons,
+  MobilePlayerModal,
 } from '@/components';
 import useAppStore from '@/stores/useAppStore';
 import {
@@ -34,6 +35,9 @@ function ResultPage() {
   // 1024px 이하를 Compact View(Tablet/Mobile)로 취급
   const [isCompactView, setIsCompactView] = useState(false);
 
+  // 선택된 트랙 상태 (모바일 모달용)
+  const [selectedTrack, setSelectedTrack] = useState(null);
+
   useEffect(() => {
     const checkCompact = () => setIsCompactView(window.innerWidth <= 1024);
     checkCompact();
@@ -41,6 +45,17 @@ function ResultPage() {
     window.addEventListener('resize', checkCompact);
     return () => window.removeEventListener('resize', checkCompact);
   }, []);
+
+  // 모바일 앨범 클릭 핸들러
+  const handleTrackClick = (track) => {
+    if (isCompactView) {
+      setSelectedTrack(track);
+    }
+  };
+
+  const closePlayerModal = () => {
+    setSelectedTrack(null);
+  };
 
   if (!emotionResult) return null;
   const currentPlaylist = emotionResult.playlists[selectedMode];
@@ -133,10 +148,20 @@ function ResultPage() {
             transition={{ duration: 0.5 }}
             style={{ width: '100%', flex: 1 }}
           >
-            <AlbumGrid tracks={currentPlaylist.tracks} />
+            <AlbumGrid
+              tracks={currentPlaylist.tracks}
+              onTrackClick={isCompactView ? handleTrackClick : undefined}
+            />
           </motion.div>
         </div>
       )}
+
+      {/* 모바일 플레이어 모달 */}
+      <MobilePlayerModal
+        isOpen={!!selectedTrack}
+        onClose={closePlayerModal}
+        track={selectedTrack}
+      />
     </motion.div>
   );
 }

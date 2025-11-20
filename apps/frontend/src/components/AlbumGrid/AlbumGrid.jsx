@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useHover } from '@/hooks';
 import { AlbumCard, AlbumHoverModal } from '@/components';
@@ -6,32 +5,12 @@ import { gridContainerStyle } from './AlbumGrid.styles';
 
 /**
  * 앨범 그리드 컴포넌트
- * * - **PC**: 마우스 오버(Hover) 시 미리듣기 재생
- * - **Tablet/Mobile**: 롱프레스(200ms 이상 터치) 시 미리듣기 재생
+ * @param {Object} props
+ * @param {Array} props.tracks - 트랙 리스트
+ * @param {Function} [props.onTrackClick] - 트랙 클릭 핸들러 (모바일용)
  */
-function AlbumGrid({ tracks }) {
+function AlbumGrid({ tracks, onTrackClick }) {
   const { handleMouseEnter, handleMouseLeave, isHovered } = useHover();
-
-  // 롱프레스 타이머 저장을 위한 Ref
-  const longPressTimerRef = useRef(null);
-
-  // 터치 시작 (롱프레스 감지)
-  const handleTouchStart = (id) => {
-    longPressTimerRef.current = setTimeout(() => {
-      handleMouseEnter(id);
-      // 햅틱 피드백 (지원 기기만)
-      if (navigator.vibrate) navigator.vibrate(10);
-    }, 200);
-  };
-
-  // 터치 종료/이동/취소 시 재생 중단
-  const stopTouchInteraction = () => {
-    if (longPressTimerRef.current) {
-      clearTimeout(longPressTimerRef.current);
-      longPressTimerRef.current = null;
-    }
-    handleMouseLeave();
-  };
 
   return (
     <div css={gridContainerStyle}>
@@ -44,22 +23,29 @@ function AlbumGrid({ tracks }) {
           // [PC] Hover Interaction
           onMouseEnter={() => handleMouseEnter(track.id)}
           onMouseLeave={handleMouseLeave}
-          // [Mobile/Tablet] Long Press Interaction
-          onTouchStart={() => handleTouchStart(track.id)}
-          onTouchEnd={stopTouchInteraction}
-          onTouchCancel={stopTouchInteraction}
-          onTouchMove={stopTouchInteraction} // 스크롤 시 중단
-          onContextMenu={(e) => e.preventDefault()} // 롱프레스 메뉴 방지
+          // [Mobile/All] Click Interaction
+          onClick={() => {
+            if (onTrackClick) {
+              onTrackClick(track);
+            }
+          }}
           style={{
             position: 'relative',
-            touchAction: 'pan-y', // 세로 스크롤만 허용하고 터치 액션은 직접 처리
             cursor: 'pointer',
             userSelect: 'none',
             WebkitUserSelect: 'none',
+            // 모바일에서 롱프레스(우클릭 메뉴) 방지
+            WebkitTouchCallout: 'none',
           }}
+          onContextMenu={(e) => e.preventDefault()}
         >
           <AlbumCard album={track} isHovered={isHovered(track.id)} />
-          <AlbumHoverModal isOpen={isHovered(track.id)} album={track} />
+
+          {/* PC에서만 Hover 모달 표시 (onTrackClick이 없거나 PC 환경일 때) */}
+          {/* 보통 onTrackClick이 있으면 모바일이라고 간주할 수 있음 */}
+          {!onTrackClick && (
+            <AlbumHoverModal isOpen={isHovered(track.id)} album={track} />
+          )}
         </motion.div>
       ))}
     </div>

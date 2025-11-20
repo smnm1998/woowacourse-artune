@@ -62,11 +62,11 @@ export const textareaStyle = css`
   }
 
   @media (max-width: ${TABLET_BP}) {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   @media (max-width: ${MOBILE_BP}) {
-    font-size: 16px;
+    font-size: 14px;
   }
 `;
 
@@ -108,8 +108,9 @@ export const sendButtonStyle = css`
   }
 
   @media (max-width: ${MOBILE_BP}) {
-    width: 55px;
-    height: 55px;
+    width: 50px;
+    height: 48px;
+    min-width: 48px;
   }
 `;
 

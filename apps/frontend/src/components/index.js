@@ -7,3 +7,4 @@ export { default as EmotionInput } from './EmotionInput/EmotionInput';
 export { default as ErrorToast } from './ErrorToast/ErrorToast';
 export { default as Loading } from './Loading/Loading';
 export { default as PlaylistToggle } from './PlaylistToggle/PlaylistToggle';
+export { default as MobilePlayerModal } from './MobilePlayerModal/MobilePlayerModal';
