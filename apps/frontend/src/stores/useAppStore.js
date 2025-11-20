@@ -24,6 +24,7 @@ const useAppStore = create((set) => ({
   isLoading: false,
   progress: 0,
   emotionResult: null,
+  loadingMessage: '',
   error: null,
 
   /**
@@ -44,6 +45,7 @@ const useAppStore = create((set) => ({
       currentPage: 'loading',
       isLoading: true,
       progress: 0,
+      loadingMessage: '감정 분석을 준비하고 있어요...',
       error: null,
       emotionResult: null,
     });
@@ -53,14 +55,18 @@ const useAppStore = create((set) => ({
       const result = await analyzeEmotionWithProgress(
         text,
         (progress, message) => {
-          // 진행률 업데이트 콜백
-          set({ progress });
+          // 현재 progress보다 큰 값일 때만 업데이트 (Math.max 활용)
+          set((state) => ({
+            progress: Math.max(state.progress, progress), // 진행률 역행 방지
+            loadingMessage: message || state.loadingMessage,
+          }));
         },
       );
 
       // 3. 완료
       set({
         progress: 100,
+        loadingMessage: '완료!',
         emotionResult: result,
         isLoading: false,
       });

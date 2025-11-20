@@ -12,6 +12,7 @@ function App() {
   // Zustand store에서 필요한 상태와 액션 선택
   const currentPage = useAppStore((state) => state.currentPage);
   const progress = useAppStore((state) => state.progress);
+  const loadingMessage = useAppStore((state) => state.loadingMessage);
   const error = useAppStore((state) => state.error);
   const clearError = useAppStore((state) => state.clearError);
   const setPage = useAppStore((state) => state.setPage);
@@ -67,7 +68,11 @@ function App() {
             animate={{ opacity: 1 }}
             style={{ position: 'absolute', width: '100%', height: '100%' }}
           >
-            <Loading progress={progress} onComplete={handleLoadingComplete} />
+            <Loading
+              progress={progress}
+              message={loadingMessage}
+              onComplete={handleLoadingComplete}
+            />
           </motion.div>
         )}
 

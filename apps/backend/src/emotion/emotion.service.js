@@ -147,15 +147,8 @@ export class EmotionService {
    * @returns {Promise<Object>} 프론트엔드 형식의 응답
    * @throws {BadRequestException} 빈 텍스트가 입력된 경우
    *
-   * 진행률 단계:
-   * - 0%: 시작
-   * - 10%: 감정 분석 시작
-   * - 30%: 감정 분석 완료
-   * - 40%: 음악 추천 시작
-   * - 60%: immerse 플레이리스트 완료
-   * - 80%: soothe 플레이리스트 완료
-   * - 95%: 디저트 이미지 생성 완료
-   * - 100%: 전체 완료
+   * - 병렬 처리(Promise.all)를 제거하고 순차 처리(await)로 변경
+   * - 진행률이 뒤섞이지 않고 차근차근 오르도록 보장
    */
   async analyzeAndRecommendWithProgress(text, onProgress) {
     if (!text || text.trim() === '') {
@@ -170,51 +163,40 @@ export class EmotionService {
     const emotion = await this.openAIService.analyzeEmotion(text);
     onProgress(30, '음악 추천을 준비하고 있어요...');
 
-    // Spotify 음악 추천 & DALLE 이미지 생성 (병렬 처리, 40%~100%)
+    // Spotify 음악 추천 - 감정 심취 (40% -> 60%)
     onProgress(40, '당신의 감정에 맞는 음악을 찾고 있어요...');
+    const immerseRecommendations = await this.spotifyService.getRecommendations(
+      emotion.immerse.genres,
+      emotion.immerse.valence,
+      emotion.immerse.energy,
+      emotion.immerse.tempo,
+    );
 
-    const [immerseRecommendations, sootheRecommendations, dessertImage] =
-      await Promise.all([
-        // immerse 플레이리스트
-        this.spotifyService
-          .getRecommendations(
-            emotion.immerse.genres,
-            emotion.immerse.valence,
-            emotion.immerse.energy,
-            emotion.immerse.tempo,
-          )
-          .then((result) => {
-            onProgress(60, '감정 심취 플레이리스트를 만들었어요...');
-            return result;
-          }),
-        // soothe 플레이리스트
-        this.spotifyService
-          .getRecommendations(
-            emotion.soothe.genres,
-            emotion.soothe.valence,
-            emotion.soothe.energy,
-            emotion.soothe.tempo,
-          )
-          .then((result) => {
-            onProgress(80, '감정 완화 플레이리스트를 만들었어요...');
-            return result;
-          }),
-        // DALLE 디저트 이미지
-        this.dalleService
-          .generateDessertImage(
-            emotion.emotion,
-            emotion.emotionLabel,
-            emotion.immerse.genres,
-          )
-          .then((result) => {
-            onProgress(95, '특별한 디저트를 준비했어요...');
-            return result;
-          }),
-      ]);
+    onProgress(60, '첫 번째 플레이리스트를 만들었어요...');
 
+    // Spotify 음악 추천 - 감정 완화 (60% -> 80%)
+    const sootheRecommendations = await this.spotifyService.getRecommendations(
+      emotion.soothe.genres,
+      emotion.soothe.valence,
+      emotion.soothe.energy,
+      emotion.soothe.tempo,
+    );
+
+    onProgress(80, '두 번째 플레이리스트를 만들었어요...');
+
+    // DALLE 디저트 이미지 생성 (80% -> 95%)
+    const dessertImage = await this.dalleService.generateDessertImage(
+      emotion.emotion,
+      emotion.emotionLabel,
+      emotion.immerse.genres,
+    );
+
+    onProgress(95, '특별한 디저트를 준비했어요...');
+
+    // 6. 전체 완료 (100%)
     onProgress(100, '완료!');
 
-    // 프론트엔드 형식으로 변환
+    // 프론트엔드 형식으로 변환 및 반환
     return {
       emotionLabel: emotion.emotionLabel,
       description: emotion.description,

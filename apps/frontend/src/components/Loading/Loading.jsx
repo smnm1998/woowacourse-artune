@@ -11,19 +11,16 @@ import {
 
 /**
  * 로딩 상태를 표시하는 컴포넌트
- * - 아이콘이 왼쪽에서 중앙으로 이동
- * - 비행 이펙트 적용
- * - 프로그래바 표시
  * @param {number} progress - 진행률 (0-100)
- * @param {Function} onComplete - 로딩 완료 후 호출될 콜백 (progress가 100일 때)
+ * @param {string} message - 로딩 메시지 (추가됨)
+ * @param {Function} onComplete - 로딩 완료 후 호출될 콜백
  */
-function Loading({ progress = 0, onComplete }) {
-  // progress가 100이 되면 아이콘이 오른쪽으로 이동
+// 👇 여기 인자에 'message'가 빠져 있었습니다. 추가해주세요!
+function Loading({ progress = 0, message, onComplete }) {
   const isComplete = progress >= 100;
 
   return (
     <div css={loadingContainerStyle}>
-      {/* 아이콘 래퍼 - 왼쪽에서 중앙으로, 완료 시 오른쪽으로 */}
       <motion.div
         css={iconWrapperStyle}
         initial={{ x: '-100vw' }}
@@ -35,13 +32,11 @@ function Loading({ progress = 0, onComplete }) {
           ease: 'easeInOut',
         }}
         onAnimationComplete={() => {
-          // 오른쪽으로 나가는 애니메이션 완료 시
           if (isComplete && onComplete) {
             onComplete();
           }
         }}
       >
-        {/* 비행 이펙트 */}
         <motion.div
           css={iconStyle}
           animate={
@@ -62,18 +57,15 @@ function Loading({ progress = 0, onComplete }) {
         </motion.div>
       </motion.div>
 
-      {/* 프로그래스 바 */}
       <motion.div
         css={progressWrapperStyle}
         initial={{ opacity: 0 }}
-        animate={{ opacity: isComplete ? 0 : 1 }} // 완료 시 페이드아웃 처리
-        transition={{
-          delay: 0.8, // 아이콘 이동 완료 후 나타남
-          duration: 0.5,
-        }}
+        animate={{ opacity: isComplete ? 0 : 1 }}
+        transition={{ delay: 0.8, duration: 0.5 }}
       >
         <ProgressBar value={progress} />
-        <p css={loadingTextStyle}>감정을 분석하고 있어요...</p>
+        {/* 이제 message 값이 정상적으로 들어옵니다 */}
+        <p css={loadingTextStyle}>{message || '감정을 분석하고 있어요...'}</p>
       </motion.div>
     </div>
   );
