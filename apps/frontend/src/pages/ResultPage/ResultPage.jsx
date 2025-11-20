@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { IoArrowBack } from 'react-icons/io5';
 import {
   ArtworkDisplay,
   PlaylistToggle,
@@ -11,24 +12,38 @@ import {
   containerStyle,
   leftSectionStyle,
   rightSectionStyle,
+  mobileMusicHeaderStyle,
+  backButtonStyle,
+  toggleWrapperStyle,
+  actionButtonWrapperStyle,
 } from './ResultPage.styles';
 
 /**
- * 감정 분석 결과와 플레이리스트를 표시하는 페이지
- * Zustand store에서 감정 분석 결과를 직접 가져와 표시
+ * 감정 분석 결과 페이지
+ *
+ * - **PC (>1024px)**: 좌측 아트워크, 우측 플레이리스트가 나란히 배치됩니다.
+ * - **Tablet/Mobile (<=1024px)**: 아트워크 뷰와 플레이리스트 뷰가 분리되어 전환됩니다.
  */
 function ResultPage() {
-  // Store에서 필요한 상태 가져오기
   const emotionResult = useAppStore((state) => state.emotionResult);
-
-  // 현재 선택된 모드 (immerse | soothe)
   const [selectedMode, setSelectedMode] = useState('immerse');
 
-  // 선택된 모드에 따른 현재 플레이리스트
-  const currentPlaylist = emotionResult?.playlists[selectedMode];
+  // 뷰 상태: 'artwork' | 'music'
+  const [viewMode, setViewMode] = useState('artwork');
 
-  // emotionResult가 없으면 렌더링하지 않음
+  // 1024px 이하를 Compact View(Tablet/Mobile)로 취급
+  const [isCompactView, setIsCompactView] = useState(false);
+
+  useEffect(() => {
+    const checkCompact = () => setIsCompactView(window.innerWidth <= 1024);
+    checkCompact();
+
+    window.addEventListener('resize', checkCompact);
+    return () => window.removeEventListener('resize', checkCompact);
+  }, []);
+
   if (!emotionResult) return null;
+  const currentPlaylist = emotionResult.playlists[selectedMode];
 
   return (
     <motion.div
@@ -36,58 +51,92 @@ function ResultPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      data-screenshot-target
     >
-      {/* 왼쪽 */}
-      <div css={leftSectionStyle}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-        >
-          <ArtworkDisplay
-            artwork={emotionResult.artwork}
-            emotionLabel={emotionResult.emotionLabel}
-            description={emotionResult.description}
-          />
-        </motion.div>
+      {/* 아트워크 섹션 
+        - PC: 항상 표시
+        - Compact View: viewMode가 'artwork'일 때만 표시 
+      */}
+      {(!isCompactView || viewMode === 'artwork') && (
+        <div css={leftSectionStyle}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <ArtworkDisplay
+              artwork={emotionResult.artwork}
+              emotionLabel={emotionResult.emotionLabel}
+              description={emotionResult.description}
+            />
+          </motion.div>
 
-        {/* 액션 버튼 */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-        >
-          <ActionButtons />
-        </motion.div>
-      </div>
+          {/* 하단 액션 버튼 그룹 */}
+          <motion.div
+            css={actionButtonWrapperStyle}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            <ActionButtons
+              // Compact View일 때만 '음악 보기' 버튼 활성화
+              onNext={isCompactView ? () => setViewMode('music') : undefined}
+            />
+          </motion.div>
+        </div>
+      )}
 
-      {/* 오른쪽 */}
-      <div css={rightSectionStyle}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
-        >
-          <PlaylistToggle
-            selectedMode={selectedMode}
-            onModeChange={setSelectedMode}
-            immerseLabel={emotionResult.playlists.immerse.modeLabel}
-            sootheLabel={emotionResult.playlists.soothe.modeLabel}
-            immerseDescription={emotionResult.playlists.immerse.description}
-            sootheDescription={emotionResult.playlists.soothe.description}
-          />
-        </motion.div>
+      {/* 플레이리스트 섹션 
+        - PC: 항상 표시
+        - Compact View: viewMode가 'music'일 때만 표시 
+      */}
+      {(!isCompactView || viewMode === 'music') && (
+        <div css={rightSectionStyle}>
+          {/* 헤더 (뒤로가기 + 토글) */}
+          <div css={mobileMusicHeaderStyle}>
+            {/* Compact View 전용 뒤로가기 버튼 */}
+            {isCompactView && (
+              <button
+                css={backButtonStyle}
+                onClick={() => setViewMode('artwork')}
+                aria-label="아트워크로 돌아가기"
+              >
+                <IoArrowBack size={24} />
+              </button>
+            )}
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-        >
-          <AlbumGrid tracks={currentPlaylist.tracks} />
-        </motion.div>
-      </div>
+            {/* 플레이리스트 모드 토글 */}
+            <div css={toggleWrapperStyle}>
+              <PlaylistToggle
+                selectedMode={selectedMode}
+                onModeChange={setSelectedMode}
+                immerseLabel={emotionResult.playlists.immerse.modeLabel}
+                sootheLabel={emotionResult.playlists.soothe.modeLabel}
+                // PC에서만 툴팁 표시 (터치 디바이스 방해 방지)
+                immerseDescription={
+                  !isCompactView
+                    ? emotionResult.playlists.immerse.description
+                    : undefined
+                }
+                sootheDescription={
+                  !isCompactView
+                    ? emotionResult.playlists.soothe.description
+                    : undefined
+                }
+              />
+            </div>
+          </div>
+
+          <motion.div
+            key={selectedMode}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ width: '100%', flex: 1 }}
+          >
+            <AlbumGrid tracks={currentPlaylist.tracks} />
+          </motion.div>
+        </div>
+      )}
     </motion.div>
   );
 }

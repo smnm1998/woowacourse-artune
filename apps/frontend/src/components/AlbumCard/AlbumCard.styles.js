@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { colors } from '@/styles/theme';
+import { TABLET_BP } from '@/constants/size';
 
 export const cardContainerStyle = css`
   display: flex;
@@ -9,17 +10,20 @@ export const cardContainerStyle = css`
   position: relative;
   width: 100%;
   height: 100%;
+
+  /* 모바일 탭 하이라이트 제거 */
+  -webkit-tap-highlight-color: transparent;
 `;
 
-// CD + 디스크 wrapper
+// 앨범 + LP판 래퍼
 export const albumWrapperStyle = css`
   position: relative;
   width: 100%;
-  aspect-ratio: 1; // 정사각형 비율 유지
-  overflow: visible; // LP판 노출
+  aspect-ratio: 1;
+  overflow: visible;
 `;
 
-// CD 디스크
+// LP 디스크 (모바일에서는 숨김 처리)
 export const vinylDiscStyle = css`
   position: absolute;
   top: 0;
@@ -27,28 +31,26 @@ export const vinylDiscStyle = css`
   width: 100%;
   height: 100%;
 
-  // 홀로그램 효과
   background: ${colors.gradients.hologram}, ${colors.gradients.vinylReflection};
   background-blend-mode: overlay;
-
   border-radius: 50%;
   border: 1px solid ${colors.border.vinyl};
-
   box-shadow:
     0 6px 20px ${colors.shadow.medium},
     inset 0 0 50px ${colors.shadow.inset};
 
   transform: rotate(-20deg);
   z-index: 0;
-
-  // 회전 시 무지개 효과 강조
   transition: filter 0.3s ease;
-
-  // hover 방지
   pointer-events: none;
+
+  /* [Mobile] 공간 효율을 위해 LP 장식 숨김 */
+  @media (max-width: ${TABLET_BP}) {
+    display: none;
+  }
 `;
 
-// CD 중앙 홀
+// LP 중앙 홀
 export const vinylCenterStyle = css`
   position: absolute;
   top: 50%;
@@ -56,18 +58,13 @@ export const vinylCenterStyle = css`
   transform: translate(-50%, -50%);
   width: 20%;
   height: 20%;
-
   background: ${colors.gradients.vinylCenter};
   border-radius: 50%;
   border: 2px solid ${colors.border.vinylCenter};
-
-  box-shadow:
-    inset 0 2px 8px rgba(0, 0, 0, 0.8),
-    0 0 12px rgba(255, 255, 255, 0.3),
-    0 0 20px rgba(200, 220, 255, 0.2);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
 `;
 
-// 앨범 커버
+// 앨범 커버 이미지
 export const albumCoverStyle = css`
   position: relative;
   width: 100%;
@@ -88,14 +85,12 @@ export const albumCoverStyle = css`
   }
 `;
 
-// 앨범 이름
+// 앨범 텍스트 정보 스타일 생략 (기존 유지)
 export const albumNameStyle = css`
   font-size: 14px;
   font-weight: 600;
   color: ${colors.text.primary};
   line-height: 1.4;
-
-  // 2줄 넘어가면 생략
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -103,14 +98,11 @@ export const albumNameStyle = css`
   text-overflow: ellipsis;
 `;
 
-// 아티스트 이름
 export const artistNameStyle = css`
   font-size: 12px;
   font-weight: 400;
   color: ${colors.text.secondary};
   line-height: 1.3;
-
-  // 1줄 넘어가면 생략
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -3,50 +3,58 @@ import { colors } from '@/styles/theme';
 
 export const containerStyle = css`
   display: flex;
-  gap: 16px;
+  gap: 12px;
   justify-content: center;
   align-items: center;
-  margin-top: 40px;
-  padding: 20px 0;
+  width: 100%;
 `;
 
-// 버튼 공통 스타일
+// 기본 버튼
 export const buttonStyle = css`
+  flex: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 12px 24px;
+  padding: 14px 20px;
   background: ${colors.background.glass.light};
   border: 1px solid ${colors.border.strong};
   border-radius: 12px;
   color: ${colors.text.primary};
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 
   &:hover {
-    backgorund: ${colors.background.glass.medium};
-    border-color: ${colors.border.hover};
+    background: ${colors.background.glass.medium};
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px ${colors.shadow.light};
   }
 
-  // 클릭 효과
   &:active {
-    transform: translateY(0);
+    transform: scale(0.98);
   }
 `;
 
-// 아이콘 래퍼
+// 강조 버튼 (음악 보기)
+export const primaryButtonStyle = css`
+  background: ${colors.accent.primary.base};
+  border-color: ${colors.accent.primary.border};
+  box-shadow: 0 4px 12px ${colors.shadow.colored};
+
+  &:hover {
+    background: ${colors.accent.primary.border};
+  }
+`;
+
 export const iconWrapperStyle = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${colors.accent.green};
+  color: ${colors.text.primary};
 `;
 
-// 버튼 텍스트
 export const buttonTextStyle = css`
   line-height: 1;
 `;
