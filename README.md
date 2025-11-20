@@ -1,104 +1,161 @@
-# Artune 🎵
+<div align="center">
+  <img src="./apps/frontend/public/Logo.png" alt="Artune Logo" width="200" />
+  <h3>감정에 따른 음원 추천 서비스</h3>
+  <p>
+    당신의 하루, 당신의 감정을 텍스트로 들려주세요.<br/>
+    <strong>AI(OPENAI)</strong>가 분석한 감정에 맞춰 <strong>음악(Spotify + Apple Music)</strong>과 <strong>디저트 아트워크(DALL-E)</strong>를 선물합니다.
+  </p>
 
-Artune은 우아한테크코스 8기 프리코스 오픈미션 프로젝트로, 사용자의 감정을 분석하여 맞춤형 음악 플레이리스트와 AI 생성 아트워크를 제공하는 서비스입니다.
+  <br/>
 
-## 프로젝트 소개
+  <p>
+    <img src="https://img.shields.io/badge/React-19.1-61DAFB?logo=react&logoColor=black" alt="React">
+    <img src="https://img.shields.io/badge/NestJS-11.0-E0234E?logo=nestjs&logoColor=white" alt="NestJS">
+    <img src="https://img.shields.io/badge/Vite-7.1-646CFF?logo=vite&logoColor=white" alt="Vite">
+    <img src="https://img.shields.io/badge/Turborepo-2.6-EF4444?logo=turborepo&logoColor=white" alt="Turborepo">
+    <img src="https://img.shields.io/badge/OpenAI-GPT--4.1--mini-412991?logo=openai&logoColor=white" alt="OpenAI">
+  </p>
+</div>
 
-사용자가 작성한 텍스트를 OpenAI Assistant API로 감정 분석하고, 그 결과를 바탕으로 Spotify 플레이리스트와 DALL-E로 생성한 픽셀 아트를 함께 제공합니다. 감정에 따라 두 가지 옵션(감정 심취 / 감정 완화)을 제공하여 사용자가 원하는 방향으로 음악을 선택할 수 있습니다.
+## 📖 프로젝트 소개
 
-### 주요 기능
+**Artune**은 사용자가 입력한 일기나 짧은 텍스트를 분석하여, 현재 감정 상태에 가장 적합한 음악 플레이리스트와 시각적 즐거움을 주는 픽셀 아트 디저트를 제공하는 웹 서비스입니다.
 
-- **감정 분석**: OpenAI Assistant API를 활용한 텍스트 감정 분석
-- **플레이리스트 큐레이션**: Spotify API를 통한 감정 기반 음악 추천
-  - 감정 심취: 현재 감정을 더 깊이 느끼고 싶을 때
-  - 감정 완화: 현재 감정을 완화하고 전환하고 싶을 때
-- **음악 미리듣기**: 각 플레이리스트의 30초 미리듣기 기능
-- **AI 아트워크**: DALL-E로 생성한 플레이리스트 맞춤 픽셀 아트 디저트 & 커피(티) 이미지
-- **모바일 목업 UI**: 핸드폰 목업 내에서 토글 형태로 옵션 전환
+단순 음악 추천이 아닌 감정을 **더 깊이 느끼고 싶을 때(Immerse)** 와 **전환하고 싶을 때(Soothe)** 두 가지 선택지를 제공합니다.
 
-## 기술 스택
+### 🌟 핵심 기능
 
-### 아키텍처
+- **AI 감정 분석 & 큐레이션**: OpenAI GPT 4.1 mini 모델을 활용해 텍스트의 미묘한 감정선을 분석하고, Spotify API 파라미터(Valence, Energy, Tempo)로 변환합니다.
+- **Dual Mode Playlist**:
+  - 🎶 **감정 심취 (Immerse)**: 슬플 땐 더 슬픈 음악으로, 기쁠 땐 더 신나는 음악으로 감정을 극대화합니다.
+  - 🌿 **감정 완화 (Soothe)**: 격한 감정을 차분하게, 혹은 우울한 기분을 산뜻하게 전환합니다.
+- **인터랙티브 음악 청취**:
+  - Spotify 메타데이터와 **iTunes Search API**를 결합하여 **30초 미리듣기**를 제공합니다.
+  - **CD 바이닐 인터랙션**: 음악 재생 시 CD가 플레이어에 들어가고, 정지 시 **DJ 스크래치 효과(Fade-out & Pitch down)**와 함께 멈추는 디테일한 UX를 구현했습니다.
+- **감정 맞춤 Pixel Art**: 감정 키워드와 장르를 조합하여 DALL-E 프롬프트를 생성, 매번 다른 '오늘의 디저트' 픽셀 아트를 제공합니다. (해당 기능은 잠시 정지시켰습니다.)
+- **실시간 분석 경험**: Server-Sent Events (SSE)를 도입하여 감정 분석 → 음악 탐색 → 이미지 생성의 진행 상황을 실시간 프로그레스 바로 시각화했습니다.
 
-- **모노레포**: Turborepo를 활용한 효율적인 멀티 패키지 관리
+---
 
-### Frontend
+## 🛠 기술 스택 (Tech Stack)
 
-- **Framework**: React 19.1
-- **Build Tool**: Vite 7.1
-- **Language**: JavaScript (ES6+)
-- **State Management**: Zustand 5.0
-- **Styling**: Emotion 11.14
+### Architecture
 
-### Backend
+- **Monorepo**: Turborepo (Frontend/Backend 패키지 통합 관리)
+- **Package Manager**: npm Workspaces
 
-- **Framework**: NestJS 11.0
-- **Runtime**: Node.js 18+
-- **Language**: JavaScript (with Babel transpilation)
-- **Testing**: Jest
+### Frontend (`apps/frontend`)
 
-### 외부 API
+- **Core**: React 19, Vite 7
+- **State Management**: Zustand 5 (전역 상태 및 비동기 액션 관리)
+- **Styling**: Emotion (CSS-in-JS), Framer Motion (고성능 애니메이션)
+- **Testing**: Vitest, React Testing Library
 
-- **OpenAI Assistant API**: 텍스트 감정 분석
-- **Spotify Web API**: 음악 플레이리스트 검색 및 미리듣기
-- **DALL-E API**: AI 픽셀 아트 이미지 생성
+### Backend (`apps/backend`)
 
-### 개발 도구
+- **Core**: NestJS 11 (Module 기반 아키텍처)
+- **Language**: JavaScript (Babel Transpilation)
+- **External APIs**:
+  - **OpenAI Assistant API**: 감정 분석 및 프롬프트 엔지니어링
+  - **Spotify Web API**: 트랙 검색 및 오디오 피쳐 분석
+  - **iTunes Search API**: 미리듣기 음원(Preview URL) 확보 (Spotify API 제약 보완)
+  - **DALL-E API**: 이미지 생성
+- **Protocol**: HTTP, SSE (Server-Sent Events)
 
-- **Code Quality**: ESLint, Prettier
-- **Version Control**: Git
-- **Package Manager**: npm 11.6.2
+## 📱 UI/UX 미리보기
 
-## 프로젝트 구조
+| 감정 입력 및 로딩 (SSE) |      결과 페이지 (PC View)      |      모바일/태블릿 반응형      |
+| :---------------------: | :-----------------------------: | :----------------------------: |
+|     (스크린샷 예정)     |         (스크린샷 예정)         |        (스크린샷 예정)         |
+| 실시간 분석 진행률 표시 | 아트워크와 플레이리스트 분할 뷰 | 토글형 뷰 전환 & 터치 인터랙션 |
+
+## ⚙️ 설치 및 실행 (Getting Started)
+
+이 프로젝트는 Turborepo를 사용하고 있습니다. 루트 디렉토리에서 한 번의 명령어로 전체 프로젝트를 실행할 수 있습니다.
+
+### 1. 환경 변수 설정 (.env)
+
+#### Backend (`apps/backend/.env`)
+
+```env
+PORT=3000
+OPENAI_API_KEY=your_openai_key
+SPOTIFY_CLIENT_ID=your_spotify_id
+SPOTIFY_CLIENT_SECRET=your_spotify_secret
+FRONTEND_URL=http://localhost:5173
+Frontend (apps/frontend/.env)
+```
+
+#### 1. 코드 스니펫
 
 ```
+VITE_API_BASE_URL=http://localhost:3000/api
+```
+
+#### 2. 패키지 설치
+
+```Bash
+npm install
+```
+
+#### 3. 개발 서버 실행 (Frontend + Backend)
+
+```Bash
+npm run dev
+
+Frontend: http://localhost:5173
+Backend: http://localhost:3000
+```
+
+### 📂 프로젝트 구조
+
+```Bash
+
 artune/
 ├── apps/
-│   ├── backend/          # NestJS 백엔드 서버
-│   │   ├── src/
-│   │   ├── test/
-│   │   └── package.json
-│   └── frontend/         # React 프론트엔드
-│       ├── src/
-│       ├── public/
-│       └── package.json
-├── package.json          # 루트 패키지 설정
-├── turbo.json           # Turborepo 설정
-└── README.md
+│ ├── backend/ # NestJS Server
+│ │ ├── src/
+│ │ │ ├── emotion/ # 감정 분석 및 오케스트레이션 (Core)
+│ │ │ ├── spotify/ # 음악 추천 로직 (Diversity 알고리즘 등)
+│ │ │ ├── openai/ # GPT 프롬프트 제어
+│ │ │ └── dalle/ # 이미지 생성
+│ │ └── ...
+│ └── frontend/ # React Client
+│ ├── src/
+│ │ ├── components/ # LP Card, Toggle, Visualizer 등
+│ │ ├── hooks/ # useAudioScratch, useAudioPlayer
+│ │ ├── stores/ # Zustand Store
+│ │ └── pages/
+│ └── ...
+├── package.json
+└── turbo.json
 ```
 
-## 시작하기
+## 💡 주요 기술적 고민 (Technical Challenges)
 
-### 사전 요구사항
+### 1. Spotify 미리듣기 문제 해결 (Spotify vs iTunes)
 
-- Node.js 18 이상
-- npm 11.6.2 이상
-- OpenAI API 키
-- Spotify API 자격증명 (Client ID, Client Secret)
+Spotify Web API가 더 이상 preview_url을 안정적으로 제공하지 않는 문제를 해결하기 위해 하이브리드 방식을 채택했습니다.
 
-## 개발 가이드
+- Spotify: 방대한 메타데이터와 추천 알고리즘 활용.
 
-### 코드 스타일
+- iTunes API: Spotify에서 추천된 트랙 정보를 바탕으로 iTunes Search API를 병렬 조회하여 미리듣기 음원을 확보.
 
-프로젝트는 ESLint와 Prettier를 사용하여 일관된 코드 스타일을 유지합니다.
+이를 통해 추천의 **정확도**와 **사용자 경험(미리듣기)** 두 마리 토끼를 잡았습니다.
 
-```bash
-# 린트 실행
-npm run lint
+### 2. 오디오 UX 디테일 (Web Audio API & Interaction)
 
-# 포맷팅
-npm run format
-```
+- 단순한 play/pause가 아닌, 실제 LP판을 멈추는 듯한 경험을 주기 위해 커스텀 훅(useAudioScratch)을 구현했습니다.
 
-### 커밋 컨벤션
+- 재생 속도(playbackRate)와 볼륨을 프레임 단위로 조절하여 Pitch Down & Fade Out 효과를 구현했습니다.
 
-- `feat`: 새로운 기능 추가
-- `fix`: 버그 수정
-- `docs`: 문서 수정
-- `style`: 코드 포맷팅
-- `refactor`: 코드 리팩토링
-- `test`: 테스트 코드
-- `chore`: 빌드 프로세스, 설정 파일 수정
+- 탭 전환 시 자동 정지, 메모리 누수 방지를 위한 Cleanup 로직을 철저히 적용했습니다.
+
+### 3. 반응형 디자인과 Glassmorphism
+
+- Emotion을 활용해 세련된 Dark Glassmorphism 테마를 구축했습니다.
+
+- PC에서는 한 화면에 아트워크와 리스트를, 모바일에서는 토글 방식을 적용하여 디바이스별 최적화된 레이아웃을 제공합니다.
 
 ## 라이센스
 
@@ -106,4 +163,4 @@ npm run format
 
 ## 기여자
 
-- 이세민 ([@isemin](https://github.com/smnm1998))
+- 이세민 ([@smnm1998](https://github.com/smnm1998))
