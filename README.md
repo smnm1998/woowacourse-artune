@@ -107,8 +107,6 @@
 
 </details>
 
-<br/>
-
 ### 🔭 향후 계획
 
 <details>
@@ -118,7 +116,7 @@
 - **알고리즘 개선**: 현재의 '인기도' 절대 의존 방식에서 벗어나, **가중치 기반 랭킹 시스템**을 도입할 예정입니다.
   - `Recency`: 발매일이 최신인 곡에 가중치 부여
   - `Diversity`: 장르의 희소성에 가중치 부여
-- **목표**: 이를 통해 사용자가 이미 알고 있는 노래뿐만 아니라, 자신의 취향에 딱 맞지만 미처 몰랐던 **'숨겨진 명곡'을 발견하는 경험(Serendipity)**을 제공하고자 합니다.
+- **목표**: 이를 통해 사용자가 이미 알고 있는 노래뿐만 아니라, 자신의 취향에 딱 맞지만 미처 몰랐던 **'숨겨진 명곡'을 발견하는 경험(Serendipity)** 을 제공하고자 합니다.
 
 <br/>
 </details>
@@ -166,7 +164,7 @@
 **Server-Sent Events (SSE)** 를 도입하여, 각 단계가 완료될 때마다 클라이언트에게 실시간으로 피드백을 제공합니다.
 
 <p align="center">
-  <img src="./docs/system_architecture_diagram.png" width="500"  alt="System Architecture Diagram" />
+  <img src="./docs/system_architecture_diagram.png" width="500"  alt="System Architecture Diagram" style="border: 2px solid black" />
 </p>
 
 ## 🛠 기술 스택 (Tech Stack)
@@ -198,7 +196,7 @@
 
 |                     감정 입력 및 로딩 (SSE)                      |                         결과 페이지 (PC View)                          |                                    모바일/태블릿 반응형                                     |
 | :--------------------------------------------------------------: | :--------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------: |
-| <img src="./docs/loading.gif" width="350" alt="Loading Process"> | <img src="./docs/pc_result_page.gif" width="350" alt="PC Result Page"> | <img src="./docs/mobile_result_page.gif" width="130" height="260" alt="Mobile Result Page"> |
+| <img src="./docs/loading.gif" width="280" alt="Loading Process"> | <img src="./docs/pc_result_page.gif" width="280" alt="PC Result Page"> | <img src="./docs/mobile_result_page.gif" width="125" height="250" alt="Mobile Result Page"> |
 |                     실시간 분석 진행률 표시                      |                    아트워크와 플레이리스트 분할 뷰                     |                               토글형 뷰 전환 & 터치 인터랙션                                |
 
 ## ⚙️ 설치 및 실행 (Getting Started)
