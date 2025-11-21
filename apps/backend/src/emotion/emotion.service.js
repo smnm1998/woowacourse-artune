@@ -4,6 +4,12 @@ import { OpenAIService } from '../openai/openai.service';
 import { SpotifyService } from '../spotify/spotify.service';
 import { DalleService } from '../dalle/dalle.service';
 import { mapToFrontendTrack } from '../spotify/utils/track-mapper.util';
+import {
+  IMMERSE_DESCRIPTIONS,
+  SOOTHE_DESCRIPTIONS,
+  DEFAULT_IMMERSE_DESCRIPTION,
+  DEFAULT_SOOTHE_DESCRIPTION,
+} from './constants/emotion-descriptions.constant';
 
 /**
  * Emotion Service - Orchestrator
@@ -25,22 +31,9 @@ export class EmotionService {
    * @returns {string} immerse 모드 설명
    */
   getImmerseDescription(emotionLabel) {
-    const descriptions = {
-      기쁨: '이 기쁨을 더 깊이 느껴보세요',
-      슬픔: '이 슬픔에 깊이 공감해보세요',
-      분노: '이 감정을 충분히 표현해보세요',
-      불안: '지금 느끼는 불안을 인정해보세요',
-      평온: '이 평온함을 더 깊이 만끽해보세요',
-      사랑: '이 따뜻한 감정에 빠져보세요',
-      아련함: '그리운 추억에 잠겨보세요',
-      신남: '이 에너지를 마음껏 발산하세요',
-      고독: '혼자만의 시간을 깊이 가져보세요',
-      몽환: '상상의 나래를 펼쳐보세요',
-      자신감: '당당한 기분을 만끽하세요',
-      설렘: '두근거리는 마음을 느껴보세요',
-    };
     return (
-      descriptions[emotionLabel] || `이 ${emotionLabel}을 더 깊이 느껴보세요`
+      IMMERSE_DESCRIPTIONS[emotionLabel] ||
+      DEFAULT_IMMERSE_DESCRIPTION(emotionLabel)
     );
   }
 
@@ -51,22 +44,9 @@ export class EmotionService {
    * @returns {string} soothe 모드 설명
    */
   getSootheDescription(emotionLabel) {
-    const descriptions = {
-      기쁨: '차분히 마음을 정리해보세요',
-      슬픔: '천천히 마음을 위로해보세요',
-      분노: '조금씩 마음을 진정시켜보세요',
-      불안: '차근차근 안정을 찾아보세요',
-      평온: '이 평온함을 유지해보세요',
-      사랑: '따뜻한 여운을 간직해보세요',
-      아련함: '현재의 따뜻함으로 채워보세요',
-      신남: '잠시 숨을 고르고 쉬어가세요',
-      고독: '따뜻한 목소리로 채워보세요',
-      몽환: '현실의 감각을 깨워보세요',
-      자신감: '여유로운 마음을 가져보세요',
-      설렘: '차분하게 마음을 가라앉혀보세요',
-    };
     return (
-      descriptions[emotionLabel] || `차분히 ${emotionLabel}을 정리해보세요`
+      SOOTHE_DESCRIPTIONS[emotionLabel] ||
+      DEFAULT_SOOTHE_DESCRIPTION(emotionLabel)
     );
   }
 
@@ -172,7 +152,7 @@ export class EmotionService {
       emotion.immerse.tempo,
     );
 
-    onProgress(60, '첫 번째 플레이리스트를 만들었어요...');
+    onProgress(60, '플레이리스트를 만들기 시작했어요...');
 
     // Spotify 음악 추천 - 감정 완화 (60% -> 80%)
     const sootheRecommendations = await this.spotifyService.getRecommendations(
@@ -182,7 +162,7 @@ export class EmotionService {
       emotion.soothe.tempo,
     );
 
-    onProgress(80, '두 번째 플레이리스트를 만들었어요...');
+    onProgress(80, '플레이리스트를 만드는 중이에요...');
 
     // DALLE 디저트 이미지 생성 (80% -> 95%)
     const dessertImage = await this.dalleService.generateDessertImage(
