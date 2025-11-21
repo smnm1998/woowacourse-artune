@@ -161,7 +161,7 @@ export class OpenAIService {
        - Soothe: 온기 채우기 / genres: ["folk", "indie pop", "acoustic pop"] / val: 0.4~0.6 / energy: 0.3~0.5
 
     10. **dreamy (몽환/신비)**
-       - Immerse: 빠져드는 / genres: ["dream pop", "shoegaze", "synth-pop", "ambient"] / val: 0.4~0.6 / energy: 0.4~0.6
+       - Immerse: 빠져드는 / genres: ["indie pop", "electronic", "ambient", "k-indie"] / val: 0.4~0.6 / energy: 0.4~0.6
        - Soothe: 현실로 / genres: ["r&b", "lo-fi", "city pop"] / val: 0.5~0.7 / energy: 0.3~0.5
 
     11. **confident (자신감/당당)**
