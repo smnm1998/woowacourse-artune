@@ -56,34 +56,26 @@ export class ITunesService {
   }
 
   /**
-   * 여러 트랙의 preview URL을 병렬로 가져옴 (성능 최적화)
+   * 여러 트랙의 preview URL을 배치로 가져옴
    *
    * @param {Array<{artistName: string, trackName: string, id: string}>} tracks
    * @returns {Promise<Map<string, string>>} trackId - previewUrl 맵
    */
   async getPreviewUrlsBatch(tracks) {
     const previewMap = new Map();
-    const results = await Promise.allSettled(
-      tracks.map(async (track) => {
-        await new Promise((resolve) =>
-          setTimeout(resolve, Math.random() * 100),
-        );
 
-        const previewUrl = await this.getPreviewUrl(
-          track.artistName,
-          track.trackName,
-        );
-
-        return { id: track.id, previewUrl };
-      }),
-    );
-
-    // 성공한 결과만 맵에 추가
-    results.forEach((result) => {
-      if (result.status === 'fulfilled' && result.value.previewUrl) {
-        previewMap.set(result.value.id, result.value.previewUrl);
+    for (const track of tracks) {
+      const previewUrl = await this.getPreviewUrl(
+        track.artistName,
+        track.trackName,
+      );
+      if (previewUrl) {
+        previewMap.set(track.id, previewUrl);
       }
-    });
+
+      // 국가별로 최대 3번까지 요청할 수 있으므로 딜레이를 약간 넉넉하게 조정 (권장)
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
 
     return previewMap;
   }

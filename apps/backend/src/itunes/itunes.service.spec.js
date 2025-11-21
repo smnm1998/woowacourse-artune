@@ -97,21 +97,22 @@ describe('ITunesService', () => {
         { id: '3', artistName: 'Unknown', trackName: 'NoPreview' },
       ];
 
-      // 병렬 처리로 순서가 보장되지 않으므로, mockImplementation 사용
-      axios.get.mockImplementation((_url, config) => {
-        const term = config.params.term;
-        if (term.includes('아이유')) {
-          return Promise.resolve({
-            data: { results: [{ previewUrl: 'https://preview1.m4a' }] },
-          });
-        }
-        if (term.includes('BTS')) {
-          return Promise.resolve({
-            data: { results: [{ previewUrl: 'https://preview2.m4a' }] },
-          });
-        }
-        return Promise.resolve({ data: { results: [] } });
-      });
+      axios.get
+        .mockResolvedValueOnce({
+          data: {
+            results: [{ previewUrl: 'https://preview1.m4a' }],
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            results: [{ previewUrl: 'https://preview2.m4a' }],
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            results: [],
+          },
+        });
 
       const result = await service.getPreviewUrlsBatch(tracks);
 
