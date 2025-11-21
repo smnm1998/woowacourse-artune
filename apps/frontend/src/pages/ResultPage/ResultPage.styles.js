@@ -54,11 +54,13 @@ export const leftSectionStyle = css`
   position: sticky;
   top: 40px;
   height: fit-content;
+  overflow-y: auto;
 
   /* [Laptop] 너비 축소 */
-  @media (max-width: ${LAPTOP_BP}) {
-    flex: 0 0 400px;
-    padding: 24px;
+  @media (max-width: ${LAPTOP_BP}) and (max-height: 800px) {
+    position: relative;
+    top: 0;
+    gap: 16px;
   }
 
   /* [Tablet] 고정 해제 및 중앙 배치 */
