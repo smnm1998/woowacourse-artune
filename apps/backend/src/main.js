@@ -10,6 +10,7 @@ const getAllowedOrigins = () => {
   const origins = [
     'http://localhost:5173', // Vite 기본 포트
     'http://localhost:3000', // 추가 개발 포트
+    'https://om-artune.vercel.app', // 프로덕션 프론트엔드
   ];
 
   // 프로덕션 환경에서는 환경변수로 추가 origin 지정
