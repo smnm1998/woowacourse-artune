@@ -64,10 +64,6 @@ export const textareaStyle = css`
   @media (max-width: ${TABLET_BP}) {
     font-size: 18px;
   }
-
-  @media (max-width: ${MOBILE_BP}) {
-    font-size: 14px;
-  }
 `;
 
 export const sendButtonStyle = css`
@@ -106,16 +102,36 @@ export const sendButtonStyle = css`
     cursor: not-allowed;
     transform: none;
   }
-
-  @media (max-width: ${MOBILE_BP}) {
-    width: 50px;
-    height: 48px;
-    min-width: 48px;
-  }
 `;
 
 export const sendButtonIconStyle = css`
   @media (max-width: ${MOBILE_BP}) {
-    font-size: 14px;
+    font-size: 16px;
+  }
+`;
+
+export const inputWrapperStyle = css`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+`;
+
+export const errorMessageStyle = css`
+  font-size: 0.875rem;
+  color: #ff6b6b;
+  margin: 0;
+  padding: 0 4px;
+  animation: fadeIn 0.2s ease-in;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 `;

@@ -1,8 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
 import EmotionInputPage from '@/pages/EmotionInputPage';
-import { Loading, ErrorToast } from '@/components';
+import { Loading } from '@/components';
 import ResultPage from '@/pages/ResultPage';
 import useAppStore from '@/stores/useAppStore';
+import { showErrorToast } from '@/components/ErrorToast/ErrorToast';
 
 /**
  * 메인 애플리케이션 컴포넌트
@@ -18,12 +21,14 @@ function App() {
   const setPage = useAppStore((state) => state.setPage);
 
   /**
-   * 에러 재시도 핸들러
+   * 에러 발생 시 토스트 표시
    */
-  const handleRetry = () => {
-    clearError();
-    setPage('input');
-  };
+  useEffect(() => {
+    if (error) {
+      showErrorToast(error);
+      clearError(); // 토스트 표시 후 에러 상태 초기화
+    }
+  }, [error, clearError]);
 
   /**
    * 로딩 완료 핸들러
@@ -43,8 +48,8 @@ function App() {
         background: 'linear-gradient(135deg, #000f00 0%, #0d0d0d 100%)',
       }}
     >
-      {/* 에러 토스트 */}
-      <ErrorToast message={error} onClose={clearError} onRetry={handleRetry} />
+      {/* 토스트 컨테이너 */}
+      <Toaster />
 
       <AnimatePresence mode="wait">
         {/* 입력 페이지 */}
