@@ -169,3 +169,34 @@ export const backButtonStyle = css`
     transform: scale(0.96);
   }
 `;
+
+export const emptyStateStyle = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 400px;
+  padding: 2rem;
+  text-align: center;
+  color: ${colors.text.secondary};
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: ${colors.text.primary};
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 400px;
+  }
+`;

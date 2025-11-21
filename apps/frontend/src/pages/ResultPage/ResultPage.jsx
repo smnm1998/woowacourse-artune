@@ -17,6 +17,7 @@ import {
   backButtonStyle,
   toggleWrapperStyle,
   actionButtonWrapperStyle,
+  emptyStateStyle,
 } from './ResultPage.styles';
 
 /**
@@ -59,6 +60,8 @@ function ResultPage() {
 
   if (!emotionResult) return null;
   const currentPlaylist = emotionResult.playlists[selectedMode];
+  const isEmpty =
+    !currentPlaylist.tracks || currentPlaylist.tracks.length === 0;
 
   return (
     <motion.div
@@ -148,10 +151,22 @@ function ResultPage() {
             transition={{ duration: 0.5 }}
             style={{ width: '100%', flex: 1 }}
           >
-            <AlbumGrid
-              tracks={currentPlaylist.tracks}
-              onTrackClick={isCompactView ? handleTrackClick : undefined}
-            />
+            {isEmpty ? (
+              <div css={emptyStateStyle}>
+                <div className="empty-icon">🎵</div>
+                <h3>플레이리스트를 찾을 수 없어요</h3>
+                <p>
+                  죄송합니다. 지금은 추천할 수 있는 음악이 없어요.
+                  <br />
+                  다른 감정을 입력하거나 잠시 후 다시 시도해주세요.
+                </p>
+              </div>
+            ) : (
+              <AlbumGrid
+                tracks={currentPlaylist.tracks}
+                onTrackClick={isCompactView ? handleTrackClick : undefined}
+              />
+            )}
           </motion.div>
         </div>
       )}
